@@ -5,7 +5,8 @@ export const sqlInjectionRegexImport =
   /(\\b(SELECT|INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|CREATE|EXEC|UNION|SCRIPT|WHERE|FROM|JOIN)\\b|(--|\/\*|\*\/|;|'|"))/i;
 export const invalidFullnameCharRegexImport = /[^a-zA-Z\s'-]/;
 export const invalidEmailCharRegexImport = /[^a-zA-Z0-9@._%+-]/;
-export const emailRegexImport = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+export const emailRegexImport =
+  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const consecutiveDotsRegexImport = /\.{2,}/;
 export const commonPasswordsImport = [
   "password",
@@ -15,15 +16,35 @@ export const commonPasswordsImport = [
   "qwerty",
   "abc123",
 ];
-export const convertToNormalWords=(text:string):string =>{
+export const convertToNormalWords = (text: string): string => {
   // Handle camelCase
-  const camelCaseToSpaces = text.replace(/([a-z])([A-Z])/g, '$1 $2');
-  
+  const camelCaseToSpaces = text.replace(/([a-z])([A-Z])/g, "$1 $2");
+
   // Handle snake_case
-  const snakeCaseToSpaces = camelCaseToSpaces.replace(/_/g, ' ');
-  
+  const snakeCaseToSpaces = camelCaseToSpaces.replace(/_/g, " ");
+
   // Convert to lowercase and capitalize the first letter of each word
-  const normalWords = snakeCaseToSpaces.toLowerCase().replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());
-  
+  const normalWords = snakeCaseToSpaces
+    .toLowerCase()
+    .replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());
+
   return normalWords;
-}
+};
+
+export const calculateAge = (dateOfBirth: string) => {
+  const birthDate = new Date(dateOfBirth);
+  const today = new Date();
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDifference = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  return age;
+};
+
+export const capitaliseCase = (word: string) =>
+  word.toLowerCase().replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());

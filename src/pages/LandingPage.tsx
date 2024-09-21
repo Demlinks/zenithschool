@@ -20,7 +20,7 @@ const LandingPage: React.FC = () => {
               Zenith School
             </h1>
             <p className="text-[13px] font-Poppins xl:text-[24px] leading-[19.5px] md:leading-[27px] xl:leading-[36px] font-[400px] lg:font-[500px] text-center mx-[30px]">
-              Welcome to Zenith School, a software application that keeps
+              Welcome to zenith school, a software application that keeps
               your records absolutely safe.
             </p>
           </div>

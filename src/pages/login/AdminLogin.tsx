@@ -12,7 +12,7 @@ import { Warning } from "../../assets/images";
 import HidePasswordSVG from "../../components/svg/HidePasswordSVG";
 import ShowPasswordSVG from "../../components/svg/ShowPasswordSVG";
 import { useSignIn } from "../../services/api/auth";
-import { getRole, saveTokens, setRole } from "../../utils/authTokens";
+import { getRole, saveTokens, setRole, setuser } from "../../utils/authTokens";
 // import LoginNavigator from "../../components/LoginNavigator";
 
 const AdminLogin: React.FC = () => {
@@ -192,6 +192,7 @@ const AdminLogin: React.FC = () => {
         if (userdata) {
           saveTokens(userdata.accessToken, userdata.refreshToken);
           setRole(userdata.userData.role);
+          setuser(userdata.userData);
           console.log(userdata);
           navigate("/dashboard"); // Navigate after successful login
         }

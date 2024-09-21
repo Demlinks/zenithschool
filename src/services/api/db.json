@@ -367,7 +367,22 @@
     ]
   },
   {
-    "guardian": []
+    "guardian": {
+      "userData": {
+        "id": 3,
+        "firstName": "guardian",
+        "lastName": "guardian",
+        "lastLogin": null,
+        "dateJoined": "2024-08-12 00:08:36+00:00",
+        "role": "guardian",
+        "phoneNumber": "810 709 5017",
+        "username": "guardian@gmail.com",
+        "email": "guardian@gmail.com",
+        "is_active": true
+      },
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI2NjU1NjU1LCJpYXQiOjE3MjY1NjkyNTUsImp0aSI6IjIwM2Y1MWJkZjYxZjQ2MjJiZDg0Y2QzODU3NjkzODMzIiwidXNlcl9pZCI6M30.x1tz2eQstRTPx-TIzEGkA34R7xH5p8yF0ArvcOE4ne0",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNjgyODQ1NSwiaWF0IjoxNzI2NTY5MjU1LCJqdGkiOiIwMWJkOWIxOGZjOTE0OWEzODc1YjQ3YTkyMWNkNmZmOSIsInVzZXJfaWQiOjN9.Dj_E2w7WBi_9oBhbWncoQ8whX4cyrqxv9bkB0wQA3_4"
+    }
   },
   {
     "student": [

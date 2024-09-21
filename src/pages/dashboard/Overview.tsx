@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Paper } from "../../assets/images";
 // import SearchSVG from "../../components/svg/dashboard navbar svg/SearchSVG";
 import {
@@ -14,86 +14,123 @@ import CalendarComponent from "../../components/dashboard/CalendarComponent";
 import OverviewFinance from "../../components/admin-dashboard/OverviewFinance";
 import TimetableSection from "../../components/guardian-dashboard/TimetableSection";
 import { getRole } from "../../utils/authTokens";
+import { getHomeAnalytic } from "../../services/api/calls/getApis";
+import { useQuery } from "@tanstack/react-query";
+import useCalendarEvent from "../../hooks/useCalendarEvent";
+import Loader from "../../shared/Loader";
 
-const events = [
-  {
-    title: "Cultural Day 2022",
-    start: new Date(2024, 7, 20),
-    end: new Date(2024, 7, 20),
-  },
-  {
-    title: "Democracy Day 2022",
-    start: new Date(2024, 7, 12),
-    end: new Date(2024, 7, 12),
-  },
-  {
-    title: "Demo Day 2024",
-    start: new Date(2024, 7, 13),
-    end: new Date(2024, 7, 13),
-  },
-  {
-    title: "Teacher's Workshop",
-    start: new Date(2024, 7, 15),
-    end: new Date(2024, 7, 15),
-  },
-  {
-    title: "Parent-Teacher Conference",
-    start: new Date(2024, 8, 1),
-    end: new Date(2024, 8, 1),
-  },
-  {
-    title: "School Anniversary",
-    start: new Date(2024, 8, 5),
-    end: new Date(2024, 8, 5),
-  },
-  {
-    title: "Midterm Break",
-    start: new Date(2024, 8, 8),
-    end: new Date(2024, 8, 12),
-  },
-  {
-    title: "Science Fair",
-    start: new Date(2024, 8, 18),
-    end: new Date(2024, 8, 18),
-  },
-  {
-    title: "Sports Day",
-    start: new Date(2024, 8, 25),
-    end: new Date(2024, 8, 25),
-  },
-  {
-    title: "Winter Break",
-    start: new Date(2024, 11, 20),
-    end: new Date(2025, 0, 4), // January 4, 2025
-  },
-  {
-    title: "Art Exhibition",
-    start: new Date(2025, 0, 10),
-    end: new Date(2025, 0, 10),
-  },
-  {
-    title: "Spring Concert",
-    start: new Date(2025, 2, 5),
-    end: new Date(2025, 2, 5),
-  },
-  {
-    title: "Graduation Day",
-    start: new Date(2025, 5, 15),
-    end: new Date(2025, 5, 15),
-  },
-  {
-    title: "Summer Camp",
-    start: new Date(2025, 6, 1),
-    end: new Date(2025, 6, 15),
-  },
+// interface EventInterface {
+//   id: number;
+//   // event: string;
+//   title: string;
+//   date: string;
+// }
 
-  // Add other events...
-];
+interface HomeAnalyticDataInterface {
+  total_students: number;
+  total_staffs: number;
+  total_subject: number;
+  completed_tuition: number;
+  void: number;
+  incompleted_tuition: number;
+  starter_pack_collected: number;
+  events: {
+    id: number;
+    event: string;
+    date: string;
+  }[];
+}
 
 const Overview: React.FC = () => {
-  const role = getRole()
+  const [totalSSS, setTotalSSS] = useState({
+    totalStudents: 0,
+    totalStaffs: 0,
+    totalSubjects: 0,
+  });
+
+  const {
+    calendarEvents,
+    isHomeAnalyticError,
+    homeAnalyticError,
+    isHomeAnalyticLoading,
+  } = useCalendarEvent();
+  // const [calendarEvents, setCalendarEvents] = useState<EventInterface[]>([]);
+  // console.log("Calendar Events", calendarEvents);
+  const role = getRole();
   // CHANGE ROLE
   // const [role] = useState("admin");
+
+  // Get data for home analytic
+  const {
+    data: homeAnalyticData,
+    // isError: isHomeAnalyticError,
+    // error: homeAnalyticError,
+    // isLoading: isHomeAnalyticLoading,
+  } = useQuery<{ data: { data: HomeAnalyticDataInterface } }>({
+    queryKey: ["home-analytic"],
+    queryFn: getHomeAnalytic,
+  });
+
+  const homeAnalytic: HomeAnalyticDataInterface = useMemo(() => {
+    return (
+      (homeAnalyticData && homeAnalyticData?.data?.data) ||
+      ({} as HomeAnalyticDataInterface)
+    );
+  }, [homeAnalyticData]);
+  const {
+    total_students = 0,
+    total_staffs = 0,
+    total_subject = 0,
+  } = homeAnalytic;
+
+  // const { events = [] } = homeAnalytic;
+
+  // const transformedEvents: EventInterface[] = useMemo(() => {
+  //   return events.map(({ id, event, date }) => ({
+  //     id,
+  //     title: event, // Rename 'event' to 'title'
+  //     date,
+  //   }));
+  // }, [events]);
+  // const filterToUpcoming = useMemo(() => {
+  //   const today = new Date();
+  //   today.setHours(1, 0, 0, 0);
+  //   const stringToday = today.getTime();
+  //   return transformedEvents.filter(
+  //     (event) => new Date(event.date).getTime() >= stringToday
+  //   );
+  // }, [transformedEvents]);
+  useEffect(() => {
+    if (
+      typeof total_students === "number" &&
+      typeof total_staffs === "number" &&
+      typeof total_subject === "number"
+      // events.length > 0
+    ) {
+      setTotalSSS({
+        totalStudents: total_students,
+        totalStaffs: total_staffs,
+        totalSubjects: total_subject,
+      });
+
+      // console.log("Hmmmm", stringToday);
+      // console.log(
+      //   "Date",
+      //   filterToUpcoming.map((event) => new Date(event.date))
+      // );
+
+      // setCalendarEvents(filterToUpcoming);
+    }
+  }, [total_students, total_staffs, total_subject]);
+
+  console.log(
+    "Home Analytics Total:",
+    homeAnalytic,
+    isHomeAnalyticError,
+    homeAnalyticError,
+    isHomeAnalyticLoading
+  );
+  isHomeAnalyticError && console.error(homeAnalyticError);
 
   return (
     <>
@@ -124,7 +161,7 @@ const Overview: React.FC = () => {
         </div>
         <div className="absolute bottom-[-22px] right-[15.22%] left-[15.22%] bg-[#FFFF] flex flex-row justify-between items-center font-Poppins py-[8px] px-[14px] ml:px-[16px] rounded-[20px] shadow-[0px_8px_26px_0px_rgba(4,_106,_126,_0.17)]">
           <div className="text-[13px] ml:text-[15px] text-center leading-[22.5px] font-medium 2xl:font-bold mr-[11px] text-[#05878F]">
-            2023/2024 Acad<span className="hidden ml:inline">emic</span> Session
+            2024/2025 Acad<span className="hidden ml:inline">emic</span> Session
           </div>
           <div className="max-w-[13px] max-h-[13px] ml:max-w-[15px] ml:max-h-[15px]">
             <img
@@ -151,7 +188,7 @@ const Overview: React.FC = () => {
                   Total Students
                 </div>
                 <div className="font-bold font-Lora text-[28px] leading-[35.84px] md:text-[22.3px] md:leading-[28.54px] text-black md:text-[rgba(68,_191,_103,_1)]">
-                  1250
+                  {totalSSS.totalStudents}
                 </div>
               </div>
             </div>
@@ -168,7 +205,7 @@ const Overview: React.FC = () => {
                   Total Staff
                 </div>
                 <div className="font-bold font-Lora text-[28px] leading-[35.84px] md:text-[22.3px] md:leading-[28.54px] text-black md:text-[#FFA427]">
-                  105
+                  {totalSSS.totalStaffs}
                 </div>
               </div>
             </div>
@@ -185,35 +222,47 @@ const Overview: React.FC = () => {
                   Total Subjects
                 </div>
                 <div className="font-bold font-Lora text-[28px] leading-[35.84px] md:text-[22.3px] md:leading-[28.54px] text-black md:text-[#2C4084]">
-                  25
+                  {totalSSS.totalSubjects}
                 </div>
               </div>
             </div>
           </div>
           <div className="overview-calendar-mobile">
-            <CalendarComponent />
+            <CalendarComponent events={calendarEvents} />
             <hr className="mb-[17px] max-w-[200px] mx-auto bg-[rgba(196,196,196,1)]" />
             <h2 className="text-[15px] md:text-[18px] xl:text-[22px] font-bold font-Lora mb-[20px] md:mb-[30px] lg:mb-[36px] xl:mb-[42px] text-center xl:text-left">
               Upcoming Events
             </h2>
-            {events.slice(0, 5).map((event, index) => (
-              <div
-                key={index}
-                className="date-container flex flex-row items-center mb-[25px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
-              >
-                <div className="upcoming-date">
-                  <div className="text-[18px] leading-none font-bold font-Lora">
-                    {event.start.toUTCString().split(" ")[1]}
-                  </div>
-                  <div className="text-[11px] font-normal">
-                    {event.start.toUTCString().split(" ")[2]}
-                  </div>
-                </div>
-                <div className=" font-Poppins font-medium text-[13px]">
-                  {event.title}
-                </div>
+            {isHomeAnalyticLoading ? (
+              <div className=" font-Lora text-center min-h-[152px] ">
+                <Loader />
               </div>
-            ))}
+            ) : isHomeAnalyticError ? (
+              <div className=" font-Lora text-center font-bold flex justify-center items-center min-h-[152px] ">
+                <span>Error fetching data</span>
+              </div>
+            ) : (
+              calendarEvents.slice(0, 5).map((event, index) => (
+                <div
+                  key={index}
+                  className="date-container flex flex-row items-center mb-[25px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
+                >
+                  <div className="upcoming-date">
+                    <div className="text-[18px] leading-none font-bold font-Lora">
+                      {new Date(event.date).toUTCString().split(" ")[1]}
+                    </div>
+                    <div className="text-[11px] font-normal">
+                      {new Date(event.date).toUTCString().split(" ")[2]}
+                    </div>
+                  </div>
+                  <div className=" font-Poppins font-medium text-[13px]">
+                    {event.title
+                      .toLowerCase()
+                      .replace(/(^\w|\s\w)/g, (match:string) => match.toUpperCase())}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
           <>
             {/* ROLE INTERCHANGING SECTION */}
@@ -228,28 +277,42 @@ const Overview: React.FC = () => {
         </div>
         <div className="overview-calendar">
           <>
-            <CalendarComponent events={events} />
+            <CalendarComponent events={calendarEvents} />
           </>
           <hr className="mb-[40px] max-w-[200px] mx-auto bg-[rgba(196,196,196,1)]" />
           <h2 className="text-[15px] md:text-[18px] xl:text-[22px] font-bold font-Lora mb-[10px] md:mb-[30px] lg:mb-[36px] xl:mb-[42px]">
             Upcoming Events
           </h2>
-          {events.slice(0, 4).map((event, index) => (
-            <div
-              key={index}
-              className="date-container flex flex-row items-center mb-[30px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
-            >
-              <div className="upcoming-date">
-                <div className="text-[18px] leading-none font-bold font-Lora">
-                  {event.start.toUTCString().split(" ")[1]}
+          {isHomeAnalyticLoading ? (
+            <div className=" font-Lora text-center min-h-[152px] ">
+              <Loader />
+            </div>
+          ) : isHomeAnalyticError ? (
+            <div className=" font-Lora text-center font-bold flex justify-center items-center min-h-[152px] ">
+              <span>Error fetching data</span>
+            </div>
+          ) : (
+            calendarEvents.slice(0, 4).map((event, index) => (
+              <div
+                key={index}
+                className="date-container flex flex-row items-center mb-[30px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
+              >
+                <div className="upcoming-date">
+                  <div className="text-[18px] leading-none font-bold font-Lora">
+                    {new Date(event.date).toUTCString().split(" ")[1]}
+                  </div>
+                  <div className="text-[11px] font-normal">
+                    {new Date(event.date).toUTCString().split(" ")[2]}
+                  </div>
                 </div>
-                <div className="text-[11px] font-normal">
-                  {event.start.toUTCString().split(" ")[2]}
+                <div className=" font-Poppins font-medium">
+                  {event.title
+                    .toLowerCase()
+                    .replace(/(^\w|\s\w)/g, (match:string) => match.toUpperCase())}
                 </div>
               </div>
-              <div className=" font-Poppins font-medium">{event.title}</div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </>

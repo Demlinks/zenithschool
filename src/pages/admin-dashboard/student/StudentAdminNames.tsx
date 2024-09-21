@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Link,
   Outlet,
@@ -6,24 +7,23 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import data from "../../../services/api/db.json";
+import useClasses from "../../../hooks/useClasses";
+import { getClassStudentsId } from "../../../services/api/calls/getApis";
+import { calculateAge } from "../../../utils/regex";
 import {
   Add,
   Filter,
   FilterMobile,
-  // PathRight,
 } from "../../../assets/images/dashboard/students";
 import { Purity_Bliss } from "../../../assets/images/users";
+import AddButton from "../../../components/admin-dashboard/AddButton";
 import CallSVG from "../../../components/svg/student/CallSVG";
 import MessageSVG from "../../../components/svg/student/MessageSVG";
-import AddButton from "../../../components/admin-dashboard/AddButton";
-// import CircularProgressBar from "../../../components/dashboard/CircularProgressBar";
-// import {
-//   PathDown,
-//   PathRight,
-//   PathUp,
-// } from "../../../assets/images/dashboard/students";
-// import GuardianSVG from "../../../components/svg/GuardianSVG";
+import Loader from "../../../shared/Loader";
+// import useClasses from "../../hooks/useClasses";
+// import { getClassStudentsId } from "../../services/api/calls/getApis";
+// import { calculateAge } from "../../utils/regex";
+
 const tableHeader: string[] = [
   "Name",
   "ID",
@@ -32,68 +32,195 @@ const tableHeader: string[] = [
   "Starter's Pack",
   "Contact",
 ];
-interface Student {
-  father_contact: string;
+
+interface classStudentIdI {
+  id: number;
+  student_class: string;
+  guardian_email: string;
+  first_name: string;
+  last_name: string;
+  middle_name: string;
+  image: string;
+  date_of_birth: string;
+  gender: string;
+  fathers_name: string;
+  mothers_name: string;
+  fathers_contact: string;
+  mothers_contact: string;
+  fathers_occupation: string;
+  mothers_occupation: string;
+  home_address: string;
+  state_of_origin: string;
+  home_town: string;
+  country: string;
+  starter_pack_collected: boolean;
+  religion: string;
+  total_tuition_paid: number;
+  schoolclass: number;
+  guardian: number;
+}
+
+interface studentDataI {
+  fathers_contact: string;
   guardian_email: string;
   starter_pack: string;
   gender: string;
   age: number;
-  id: string;
-  image_url: string;
-  name: string;
+  id: number;
+  image: string;
+  full_name: string;
   class: string;
+  date_of_birth: string;
+  fathers_name: string;
+  mothers_name: string;
+  mothers_contact: string;
+  fathers_occupation: string;
+  mothers_occupation: string;
+  home_address: string;
+  state_of_origin: string;
+  home_town: string;
+  country: string;
+  religion: string;
+  total_tuition_paid: number;
 }
+
 const StudentAdminNames: React.FC = () => {
   // Error Go Back
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
   };
+
+  const [studentData, setStudentData] = useState<studentDataI[]>([]);
   // const [tableActive, setTableActive] = useState<number | null>(null);
   // const { id } = useParams();
   // const navigate = useNavigate();
   const [editable, setEditable] = useState<boolean>(false);
   const [addToggle, setAddToggle] = useState<boolean>(false);
-  const [classes] = useState<string[]>([
-    "creche",
-    "k.g 1",
-    "k.g 2",
-    "nursery 1",
-    "nursery 2",
-    "primary 1",
-    "primary 2",
-    "primary 3",
-    "primary 4",
-    "primary 5",
-  ]);
+  // const [classes] = useState<string[]>([
+  //   "creche",
+  //   "k.g 1",
+  //   "k.g 2",
+  //   "nursery 1",
+  //   "nursery 2",
+  //   "primary 1",
+  //   "primary 2",
+  //   "primary 3",
+  //   "primary 4",
+  //   "primary 5",
+  // ]);
+  // GETTING CLASS Data
+  const { classNameData: classes, isClassLoading, isClassError } = useClasses();
+  //Ends
   const { id } = useParams();
-  const classNameID = useLocation()
-    .pathname.split("/")
-    .map((decodeURI) => decodeURIComponent(decodeURI))
-    .find((pathname) => classes.includes(pathname));
-
-  //   const dataa = data.flatMap((entry) => {
-  //     return entry.student?.map((entry) => {
-  //     return entry.class;
-  //     });
-  //   });
-  //   const [studentDropDown, setStudentDropDown] = useState<string>("");
-  const [studentData, setStudentData] = useState<Student[]>([]);
+  // const ID: number = Number(id);
+  // Classname from URL and compare
   useEffect(() => {
-    const studentData = data.flatMap(
-      (data) =>
-        data.student
-          ?.filter(
-            (studentData) => studentData.class.toLowerCase() === classNameID
-          )
-          .map((studentData) => ({
-            ...studentData,
-            age: Number(studentData.age),
-          })) || []
+    console.log("className Dataaa", isClassLoading, classes);
+  }, [classes, isClassLoading]);
+  const location = useLocation();
+  const className = useMemo(() => {
+    const decodedPaths = location.pathname
+      .split("/")
+      .map((decodeURI) => decodeURIComponent(decodeURI));
+
+    return (
+      (classes &&
+        decodedPaths.find((pathname) =>
+          classes
+            .map((classes) => classes.name.toLowerCase())
+            .includes(pathname)
+        )) ||
+      ""
     );
-    console.log(studentData);
-    setStudentData(studentData);
+  }, [classes, location.pathname]);
+
+  // const className = useLocation()
+  //   .pathname.split("/")
+  //   .map((decodeURI) => decodeURIComponent(decodeURI))
+  //   .find((pathname) => classes
+  //           .map((classes) => classes.name.toLowerCase())
+  //           .includes(pathname));
+  useEffect(() => {
+    console.log("classNameActive Dataaa :", className);
+  }, [className]);
+  //Get class id with filter of classes and classnames
+  const classNameID: number[] = useMemo(() => {
+    return classes
+      .filter((classes) => {
+        return classes.name.toLowerCase() === className;
+      })
+      .map((classArr) => {
+        return classArr.id;
+      });
+  }, [className, classes]);
+  useEffect(() => {
+    console.log("classNameActiveID :", classNameID[0]);
   }, [classNameID]);
+  // GETTING CLASS Students Data by ID
+  const {
+    data: classStudentsIdData,
+    isError: isClassStudentsIdError,
+    // error: classStudentsIdError,
+    isLoading: isClassStudentsIdLoading,
+  } = useQuery({
+    queryKey: ["classStudents", classNameID[0]],
+    queryFn: () => getClassStudentsId(classNameID[0]),
+    // enabled: classNameID.length > 0,
+    enabled: classNameID.length > 0 ? true : false,
+  });
+
+  useEffect(() => {
+    console.log(
+      "classStudentID Data :",
+      classStudentsIdData,
+      isClassStudentsIdError,
+      isClassStudentsIdLoading
+    );
+  }, [classStudentsIdData, isClassStudentsIdError, isClassStudentsIdLoading]);
+  const classStudentsId: classStudentIdI[] = useMemo(() => {
+    if (
+      !classStudentsIdData ||
+      !classStudentsIdData.data ||
+      !Array.isArray(classStudentsIdData.data.data)
+    ) {
+      return [];
+    }
+    return classStudentsIdData.data.data;
+  }, [classStudentsIdData]);
+
+  const filteredClassStudentId: studentDataI[] = useMemo(() => {
+    return classStudentsId.map((student) => ({
+      ...student,
+      // id: student.id,
+      full_name: `${student.last_name} ${student.first_name} ${student.middle_name}`,
+      image: student.image,
+      // gender: student.gender,
+      age: calculateAge(student.date_of_birth),
+      // fathers_contact: student.fathers_contact,
+      class: student.student_class || className || "-",
+      // guardian_email: student.guardian_email,
+      starter_pack: student.starter_pack_collected
+        ? "Collected"
+        : "Not Collected",
+    }));
+  }, [className, classStudentsId]);
+  useEffect(() => {
+    filteredClassStudentId.length > 0 && setStudentData(filteredClassStudentId);
+
+    // console.log(
+    //   "Class Students Id Data:",
+    //   classStudentsId,
+    //   isClassStudentsIdError,
+    //   classStudentsIdError,
+    //   isClassStudentsIdLoading
+    // );
+    console.log("Student Dataaa", studentData);
+  }, [filteredClassStudentId, studentData]);
+  const studentIDs: number[] = useMemo(() => {
+    return studentData.map((student) => student.id);
+  }, [studentData]);
+  // console.log("Ohhhh", studentIDs);
   return (
     <div className="student-names">
       <div className="student-names-list">
@@ -102,11 +229,35 @@ const StudentAdminNames: React.FC = () => {
             Students <span className="hidden md:inline-block">Database</span>
           </div>
           <div className="student-names-list-header2">
-            {classNameID && classes.includes(classNameID)
-              ? classNameID?.toUpperCase()
-              : "Error"}
+            {isClassLoading || isClassStudentsIdLoading || classNameID.length <= 0 ? (
+              <div className=" font-Lora text-center w-full">Loading...</div>
+            ) : isClassError ? (
+              <div className=" font-Lora text-center w-full font-bold">
+                <span>Error fetching data</span>
+              </div>
+            ) : className &&
+              classes
+                .map((classes) => classes.name.toLowerCase())
+                .includes(className) ? (
+              className?.toUpperCase()
+            ) : (
+              "Error"
+            )}
           </div>
-          {classNameID && classes.includes(classNameID) ? (
+          {
+          isClassLoading || isClassStudentsIdLoading || classNameID.length <= 0 ? (
+            <div className=" font-Lora text-center w-full min-h-[152px] hidden md:flex md:flex-row md:justify-center md:items-center">
+              <Loader />
+            </div>
+          ) : isClassError ? (
+            <div className=" font-Lora text-center w-full min-h-[152px] font-bold hidden md:flex md:flex-row md:justify-center md:items-center">
+              <span>Error fetching data</span>
+            </div>
+          ) : 
+          className &&
+            classes
+              .map((classes) => classes.name.toLowerCase())
+              .includes(className) ? (
             <div className="student-names-list-header3">
               <button
                 className={`mr-[10px] lg:mr-[15px] xl:mr-[20px] ${
@@ -149,7 +300,19 @@ const StudentAdminNames: React.FC = () => {
         <div className="student-names-list-container">
           <>
             {/* Mobile view */}
-            {classNameID && classes.includes(classNameID) ? (
+            {isClassLoading || isClassStudentsIdLoading || !classStudentsIdData || classNameID.length <= 0 ? (
+              <div className=" font-Lora text-center w-full min-h-[152px] flex flex-row justify-center items-center md:hidden">
+                <Loader />
+              </div>
+            ) : isClassError ? (
+              <div className=" font-Lora text-center w-full min-h-[152px] font-bold flex flex-row justify-center items-center md:hidden">
+                <span>Error fetching data</span>
+              </div>
+            ) : className &&
+              classes.length > 0 &&
+              classes
+                .map((classes) => classes.name.toLowerCase())
+                .includes(className) ? (
               <>
                 <div className="block md:hidden grow">
                   <div className="student-names-list-container-mheader">
@@ -205,6 +368,9 @@ const StudentAdminNames: React.FC = () => {
                   </div>
                   {addToggle ? (
                     <AddButton
+                      classNameID={classNameID[0]}
+                      studentIDs={studentIDs}
+                      className={className}
                       setAddToggle={setAddToggle}
                       addToggle={addToggle}
                     />
@@ -212,9 +378,14 @@ const StudentAdminNames: React.FC = () => {
                     <Outlet
                       context={{
                         studentData,
-                        classNameID,
+                        className,
+                        classNameID: classNameID[0],
                         editable,
                         setEditable,
+                        isClassLoading,
+                        isClassStudentsIdLoading,
+                        isClassError,
+                        isClassStudentsIdError,
                       }}
                     />
                   )}
@@ -228,19 +399,45 @@ const StudentAdminNames: React.FC = () => {
                       ))}
                     </tr>
                   </thead>
-                  {studentData.length > 0 ? (
+                  {isClassLoading || isClassStudentsIdLoading || !classStudentsIdData || classNameID.length <= 0 ? (
+                    <tbody>
+                      <tr>
+                        <td
+                          className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%] min-h-[152px]"
+                          colSpan={6}
+                        >
+                          <Loader />
+                        </td>
+                      </tr>
+                    </tbody>
+                  ) : isClassError || isClassStudentsIdError ? (
+                    <tbody>
+                      <tr>
+                        <td
+                          className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%] min-h-[152px]"
+                          colSpan={6}
+                        >
+                          <span>Error fetching data</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  ) : studentData.length > 0 ? (
                     <tbody>
                       {studentData?.map((data, index) => (
                         <tr
                           key={index}
                           className={
-                            id === data.id
+                            id === data.id.toString()
                               ? "table-row-details-active table-row-details"
                               : "table-row-details"
                           }
                           onClick={() =>
                             // setTableActive(tableActive === index ? null : index),
-                            navigate(id === data.id ? "" : data.id)
+                            navigate(
+                              id === data.id?.toString()
+                                ? ""
+                                : data.id.toString()
+                            )
                           }
                         >
                           <td>
@@ -251,11 +448,13 @@ const StudentAdminNames: React.FC = () => {
                                 id="name"
                                 className=" size-[14px] checked:bg-black accent-[#05878F] appearance-auto hover:accent-[#05878F] border-[#05878F] cursor-pointer"
                                 onChange={() => {}}
-                                checked={id === data.id ? true : false}
+                                checked={
+                                  id === data.id.toString() ? true : false
+                                }
                               />
                               <div className="max-w-[20px] size-[20px] h-[20px] rounded-full overflow-hidden mr-[5px] ml-[10px]">
                                 <img
-                                  src={data.image_url || Purity_Bliss}
+                                  src={data.image || Purity_Bliss}
                                   alt="student image"
                                   className="size-full object-cover object-center"
                                   onError={(e) =>
@@ -264,7 +463,7 @@ const StudentAdminNames: React.FC = () => {
                                 />
                               </div>
                               <div className="md:max-w-[130px] lg:max-w-[170px] whitespace-nowrap overflow-hidden text-ellipsis">
-                                {data.name}
+                                {data.full_name}
                               </div>
                             </div>
                           </td>
@@ -275,9 +474,9 @@ const StudentAdminNames: React.FC = () => {
                           <td className="text-center">
                             <div className="flex flex-row justify-center">
                               <Link
-                                to={`tel:${data.father_contact}`}
+                                to={`tel:${data.fathers_contact}`}
                                 className={`mr-[15px] size-[20px] rounded-full flex justify-center items-center ${
-                                  id === data.id
+                                  id === data.id.toString()
                                     ? "active-call-contact bg-[#05878F]"
                                     : "bg-[white]"
                                 }`}
@@ -289,7 +488,7 @@ const StudentAdminNames: React.FC = () => {
                               <Link
                                 to={`mailto:${data.guardian_email}`}
                                 className={`size-[20px] rounded-full flex justify-center items-center ${
-                                  id === data.id
+                                  id === data.id.toString()
                                     ? "active-message-contact bg-[#05878F]"
                                     : "bg-[white]"
                                 }`}
@@ -336,8 +535,15 @@ const StudentAdminNames: React.FC = () => {
       </div>
       <div className="student-names-database">
         {addToggle ? (
-          <AddButton setAddToggle={setAddToggle} addToggle={addToggle} />
-        ) : id && classes.includes(id) ? (
+          <AddButton
+            classNameID={classNameID[0]}
+            studentIDs={studentIDs}
+            className={className}
+            setAddToggle={setAddToggle}
+            addToggle={addToggle}
+          />
+        ) : id &&
+          classes.map((classes) => classes.name.toLowerCase()).includes(id) ? (
           <div className="flex justify-center items-center pt-[40px] md:pt-[39px] min-h-[calc(100%-40px)] px-10">
             <div className="text-center">
               Please click on a student to display their details.
@@ -345,7 +551,17 @@ const StudentAdminNames: React.FC = () => {
           </div>
         ) : (
           <Outlet
-            context={{ studentData, classNameID, editable, setEditable }}
+            context={{
+              studentData,
+              className,
+              classNameID: classNameID[0],
+              editable,
+              setEditable,
+              isClassLoading,
+              isClassStudentsIdLoading,
+              isClassError,
+              isClassStudentsIdError,
+            }}
           />
         )}
         {/* Nothing to show yet */}

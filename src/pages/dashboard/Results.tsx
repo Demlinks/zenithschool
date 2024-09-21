@@ -4,7 +4,7 @@ const Results: React.FC = () => {
   return (
     <div className="results">
       <div className="results-header">Results</div>
-      <div className="results-class-container">
+      <div className="results-class-container flex-grow">
         <div className="results-class">
           <span>Crèche</span>
           {/* <span>^</span> */}

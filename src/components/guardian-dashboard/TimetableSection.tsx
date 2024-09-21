@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thurday", "Friday"];
 
@@ -134,4 +134,4 @@ const TimetableSection: React.FC = () => {
   );
 };
 
-export default TimetableSection;
+export default memo(TimetableSection);

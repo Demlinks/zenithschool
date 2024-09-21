@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import { MobileHeader } from "./Profile";
 import { getAllTimetables } from "../../services/api/staffApis";
 import Loader from "../../shared/Loader";
+import { MobileHeader } from "../guardian-dashboard/Profile";
 
 interface ClassPeriod {
   [key: string]: string[]; // Dynamic string keys, with the value being an array of strings
@@ -107,7 +107,7 @@ export const Timetable = ({
   );
 };
 
-const TimetablesGuardian = () => {
+const TimetablesStaff = () => {
   function transformTimetable(backendData: any): ClassPeriod[] {
     const classPeriods: ClassPeriod[] = timePeriods.map((timePeriod, index) => {
       const periodObject: ClassPeriod = {}; // Initialize as ClassPeriod type
@@ -169,7 +169,7 @@ const TimetablesGuardian = () => {
     <div className="w-6/6 text-center mt-[20%]">{error.message}</div>;
   }
   return (
-    <section className=" bg-[linear-gradient(259.46deg,_#05878F_10.76%,_rgba(5,_135,_143,_1)_107.57%)] md:bg-none min-h-[calc(100vh-80px)] md:min-h-0 flex flex-col">
+    <section className=" bg-[linear-gradient(259.46deg,_#05878F_10.76%,_rgba(5,_135,_143,_1)_107.57%)] md:bg-none">
       <MobileHeader title="Timetable" subtitle="JSS 1A" />
 
       <div className="rounded-t-[30px] flex flex-col gap-0 md:gap-5 pt-[20px] md:pt-0 md:mt-[30px] md:px-[30px] bg-white">
@@ -187,4 +187,4 @@ const TimetablesGuardian = () => {
   );
 };
 
-export default TimetablesGuardian;
+export default TimetablesStaff;

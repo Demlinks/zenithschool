@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 .student-addbutton-db-details {
   @apply flex flex-row text-[15px];
   @apply mb-[20px] md:mb-[15px];

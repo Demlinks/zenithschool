@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { IProfile } from "../types/user.type";
 
 const devEnvironment = import.meta.env.VITE_REACT_APP_ENV || "development";
 export const saveTokens = (accessToken?: string, refreshToken?: string) => {
@@ -20,6 +21,9 @@ export const saveTokens = (accessToken?: string, refreshToken?: string) => {
 export const setRole = (role: string) => {
   sessionStorage.setItem("role", role);
 };
+export const setuser = (user: IProfile) => {
+  sessionStorage.setItem("user", JSON.stringify(user));
+};
 
 export const getAccessToken = (): string | undefined => {
   return Cookies.get("access_token");
@@ -33,6 +37,10 @@ export const getRole = (): string | undefined => {
   return sessionStorage.getItem("role") as string;
 };
 
+export const getUser = (): IProfile => {
+  return JSON.parse(sessionStorage.getItem("user") as string);
+};
+
 export const clearTokens = () => {
   Cookies.remove("access_token");
   Cookies.remove("refresh_token");
@@ -41,4 +49,5 @@ export const clearTokens = () => {
 // Clearing of role
 export const clearRole = () => {
   sessionStorage.removeItem("role");
+  sessionStorage.removeItem("user");
 };

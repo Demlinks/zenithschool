@@ -13,16 +13,17 @@ import { Link, useNavigate } from "react-router-dom";
 import CircularProgressBar from "../../components/dashboard/CircularProgressBar";
 import GuardianSVG from "../../components/svg/GuardianSVG";
 import { useQuery } from "@tanstack/react-query";
-import { getClassStat } from "../../services/api/calls/getClassStat";
+// import { getClassStat } from "../../services/api/calls/getClassStat";
 import Loader from "../../shared/Loader";
-import { getBaseClass } from "../../services/api/calls/getBaseClass";
+// import { getBaseClass } from "../../services/api/calls/getBaseClass";
 import { baseClassInterface } from "../../types/user.type";
+import { getBaseClass, getClassStat } from "../../services/api/calls/getApis";
 
 const classStatsTableHeader: string[] = [
   "Class",
-  "Completed",
-  "Incomplete",
-  "Void",
+  "Completed (%)",
+  "Incomplete (%)",
+  "Void (%)",
 ];
 
 const Tuition: React.FC = () => {
@@ -53,8 +54,15 @@ const Tuition: React.FC = () => {
     queryFn: () => getBaseClass(),
   });
 
+  // const baseClass: baseClassInterface[] = useMemo(() => {
+  //   return (baseClassData && baseClassData.data.data) || [];
+  // }, [baseClassData]);
+
   const baseClass: baseClassInterface[] = useMemo(() => {
-    return (baseClassData && baseClassData.data.data) || [];
+    if (!baseClassData || !baseClassData.data || !Array.isArray(baseClassData.data.data)) {
+      return [];
+    }
+    return baseClassData.data.data;
   }, [baseClassData]);
   useEffect(() => {
     // console.log(
@@ -94,13 +102,13 @@ const Tuition: React.FC = () => {
   const classStats: classStats[] = useMemo(() => {
     return (classStatData && classStatData.data.data) || [];
   }, [classStatData]);
-  console.log(
-    "Class Stats:",
-    classStats,
-    isClassStatError,
-    classStatError,
-    isClassStatLoading
-  );
+  // console.log(
+  //   "Class Stats:",
+  //   classStats,
+  //   isClassStatError,
+  //   classStatError,
+  //   isClassStatLoading
+  // );
   isClassStatError && console.error(classStatError);
 
   // Student fees from classes to students
@@ -146,7 +154,7 @@ const Tuition: React.FC = () => {
           .join(" ")
     )
     .filter(Boolean) as string[];
-  console.log(capitalizedClassName);
+  // console.log(capitalizedClassName);
   const [tuitionFeesDropDown, setTuitionFeesDropDown] = useState<boolean>(true);
 
   // const currentClassFees =
@@ -164,7 +172,7 @@ const Tuition: React.FC = () => {
     );
   }, [ActiveClass.classNow, baseClass]);
 
-  console.log("Current Class Feess : ", currentClassFees[0]);
+  // console.log("Current Class Feess : ", currentClassFees[0]);
 
   useEffect(() => {
     currentClassFees &&
@@ -176,11 +184,11 @@ const Tuition: React.FC = () => {
   //   return <Loader />;
   // }
   return (
-    <div className="m-0 md:my-[30px] bg-[linear-gradient(259.46deg,_#05878F_10.76%,_rgba(5,_135,_143,_1)_107.57%)] md:bg-none">
+    <div className="m-0 md:my-[30px] bg-[linear-gradient(259.46deg,_#05878F_10.76%,_rgba(5,_135,_143,_1)_107.57%)] md:bg-none heightprob">
       <div className="tuition-header block md:hidden">Tuition</div>
-      <div className="tuition-body-container">
+      <div className="tuition-body-container flex-grow">
         <div className="tuition-body-container-header">
-          <div className="hidden md:block shadow-[0px_1px_25px_0px_#389FA61A] p-4 rounded-[20px] text-[18px] leading-[23.04px] font-bold font-Lora text-[#05878F] mr-5">
+          <div className="hidden md:block shadow-[0px_1px_25px_0px_#389FA61A] p-4 rounded-[20px] text-[18px] leading-[23.04px] font-bold font-Lora text-[#05878F] mr-5 heightprob">
             Finance
           </div>
           <div className="hidden flex-row self-center">
@@ -292,7 +300,7 @@ const Tuition: React.FC = () => {
                       <Loader />
                     </div>
                   ) : isBaseClassError ? (
-                    <div className=" font-Lora text-center flex justify-center items-center font-medium min-h-[152px] ">
+                    <div className=" font-Lora text-center font-bold flex justify-center items-center min-h-[152px] ">
                       <span>Error fetching data</span>
                     </div>
                   ) : (
@@ -316,8 +324,12 @@ const Tuition: React.FC = () => {
               </div>
               <div className="tuition-class-fees-overview-body-content">
                 {isBaseClassLoading ? (
-                  <div className=" font-Lora text-center min-h-[152px] ">
+                  <div className=" font-Lora text-center min-h-[100px] ">
                     <Loader />
+                  </div>
+                ) : isBaseClassError ? (
+                  <div className=" font-Lora text-center font-bold flex justify-center items-center min-h-[152px] ">
+                    <span>Error fetching data</span>
                   </div>
                 ) : (
                   <>
@@ -423,62 +435,47 @@ const Tuition: React.FC = () => {
               <tbody>
                 {classStats &&
                   classStats.map((classData: classStats, index: number) => {
-                    const completedHasDot =
-                      classData.paid &&
-                      classData.total &&
-                      (((classData.paid * 100) / classData.total)
-                        .toString()
-                        .split("")
-                        .includes(".")
-                        ? ((classData.paid * 100) / classData.total).toFixed(2)
-                        : (classData.paid * 100) / classData.total);
+                    const calculatePercentage = (value: number) => {
+                      if (!classData.total) return 0;
+                      const percentage = (value / classData.total) * 100;
+                      return Number(percentage.toFixed(2)) || 0;
+                    };
 
-                    const IncompleteHasDot =
-                      classData.paid_half &&
-                      classData.total &&
-                      (((classData.paid_half * 100) / classData.total)
-                        .toString()
-                        .split("")
-                        .includes(".")
-                        ? (
-                            (classData.paid_half * 100) /
-                            classData.total
-                          ).toFixed(2)
-                        : (classData.paid_half * 100) / classData.total);
-
-                    const VoidHasDot =
-                      classData.paid_nothing &&
-                      classData.total &&
-                      (((classData.paid_nothing * 100) / classData.total)
-                        .toString()
-                        .split("")
-                        .includes(".")
-                        ? (
-                            (classData.paid_nothing * 100) /
-                            classData.total
-                          ).toFixed(2)
-                        : (classData.paid_nothing * 100) / classData.total);
                     return (
                       <tr key={index} className="class-stats-table-row-details">
                         <td className="">{classData.class}</td>
-                        <td className="">{completedHasDot}</td>
-                        <td className="">{IncompleteHasDot}</td>
-                        <td className="">{VoidHasDot}</td>
+                        <td className="">
+                          {(classData.paid &&
+                            calculatePercentage(classData.paid)) ||
+                            0}
+                        </td>
+                        <td className="">
+                          {(classData.paid_half &&
+                            calculatePercentage(classData.paid_half)) ||
+                            0}
+                        </td>
+                        <td className="">
+                          {(classData.paid_nothing &&
+                            calculatePercentage(classData.paid_nothing)) ||
+                            0}
+                        </td>
                       </tr>
                     );
                   })}
               </tbody>
             ) : (
-              <tbody>
-                <tr>
-                  <td
-                    className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%]"
-                    colSpan={6}
-                  >
-                    Data Not Available
-                  </td>
-                </tr>
-              </tbody>
+              isClassStatError && (
+                <tbody>
+                  <tr>
+                    <td
+                      className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%] min-h-[100px]"
+                      colSpan={6}
+                    >
+                      <span>Error fetching data</span>
+                    </td>
+                  </tr>
+                </tbody>
+              )
             )}
           </table>
         </div>

@@ -10,13 +10,24 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+// import { totalPercentageValueI } from "../../types/user.type";
+interface PaymentValue {
+  total_students: number;
+  paid: number;
+  paid_half: number;
+  paid_nothing: number;
+}
 
-const StudentChat: React.FC = () => {
+// Define the props for the StudentChat component
+interface StudentChatProps {
+  value: PaymentValue;
+}
+const StudentChat: React.FC<StudentChatProps> = ({value}) => {
   const data = [
-    { name: "Total", value: 10, color: "#92D7F7" },
-    { name: "Completed", value: 6, color: "#29CC97" },
-    { name: "Incomplete", value: 4, color: "#98654F" },
-    { name: "Void", value: 0, color: "#FF2E2E" },
+    { name: "Total", value: value.total_students, color: "#92D7F7" },
+    { name: "Completed", value: value.paid, color: "#29CC97" },
+    { name: "Incomplete", value: value.paid_half, color: "#98654F" },
+    { name: "Void", value: value.paid_nothing, color: "#FF2E2E" },
   ];
   return (
     <div

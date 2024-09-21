@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 /* @import 'react-big-calendar/lib/css/react-big-calendar.css'; */
 /* @import "./style/student.css"; */
 
@@ -10,6 +10,13 @@
   /* body{
     @apply overflow-x-hidden !important;
   } */
+  .react-datepicker {
+    @apply md:-translate-x-14 scale-95 -translate-y-2;
+  }
+  .heightprob {
+    @apply min-h-[calc(100vh-80px)] md:min-h-0 flex flex-col;
+  }
+
   .BGImage {
     @apply bg-[url("../src/assets/images/BackgroundImage.jpeg")] bg-cover bg-no-repeat bg-fixed bg-center;
   }
@@ -47,16 +54,16 @@
   DASHBOARD
   ////////////////////////////
   */
-  .dashboard {
-    /* @apply relative; */
+  .hsmInput {
+    @apply border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2;
   }
   .dashboard-main {
     @apply ml-0  md:ml-[26%] lg:ml-[24%] xl:ml-[20.43%] 2xl:ml-[20%];
     /* @apply mt-0 md:mt-[32px] lg:mt-[28px] xl:mt-[22px] 2xl:mt-[11px]; */
     @apply pt-0 md:pt-[68px] lg:pt-[72px] xl:pt-[78px] 2xl:pt-[89px];
-    /* @apply min-h-screen; */
+    @apply min-h-[calc(100vh-80px)] md:min-h-0;
     @apply max-w-full;
-    @apply mb-[80px] md:mb-0;
+    @apply pb-[80px] md:pb-0;
   }
   .dashboard-header {
     /* @apply flex flex-row; */
@@ -285,7 +292,6 @@
     @apply shadow-[0px_1px_25px_0px_rgba(56,159,166,0.1)];
     @apply rounded-[15px];
     @apply p-5;
-    
   }
 
   /* 
@@ -336,8 +342,8 @@
   }
 
   /* .calendar-styling .rbc-today { */
-    /* background-color: #e0f2f1; */
-    /* @apply bg-[rgba(160,236,181,1)];
+  /* background-color: #e0f2f1; */
+  /* @apply bg-[rgba(160,236,181,1)];
   } */
   .calendar-styling .rbc-month-view {
     @apply border-none;
@@ -366,15 +372,15 @@
     @apply hidden;
   }
   .calendar-styling .rbc-btn-group {
-   @apply flex flex-row;
+    @apply flex flex-row;
   }
-  .calendar-styling .rbc-btn-group button:nth-child(1){
+  .calendar-styling .rbc-btn-group button:nth-child(1) {
     @apply order-2;
   }
-  .calendar-styling .rbc-btn-group button:nth-child(2){
+  .calendar-styling .rbc-btn-group button:nth-child(2) {
     @apply order-1;
   }
-  .calendar-styling .rbc-btn-group button:last-child{
+  .calendar-styling .rbc-btn-group button:last-child {
     @apply order-3;
   }
   /* .rbc-calendar div.rbc-toolbar{
@@ -481,19 +487,17 @@
 
   /* guardian-overview-styles */
 
-
-    /*
+  /*
   /////////////////////////////////////
   TIMETABLE
   /////////////////////////////////////
   */
   .timetable-section {
     @apply w-full mt-0 md:mt-[17.36px] mb-[50px] py-[20px] md:py-0 shadow-[0px_8px_26px_0px_rgba(4,_106,_126,_0.17)] md:shadow-none;
-
   }
 
   .timetable-section-1 {
-    @apply w-full mt-0 mb-[10px] py-[10px] md:py-0 ;
+    @apply w-full mt-0 mb-[10px] py-[10px] md:py-0;
   }
 
   .timetable {
@@ -590,7 +594,7 @@
     @apply bg-clr1 text-[8px] text-white font-Poppins rounded-full px-3 py-1 hover:cursor-pointer;
   }
 
-  .zs-normal-btn {
+  .hsm-normal-btn {
     @apply rounded-[15px] flex shadow-[0px_1px_25px_0px_#389FA61A];
   }
 }
@@ -612,7 +616,7 @@
   }
 
   .custom-checkbox:checked::after {
-    content: '\2714';
+    content: "\2714";
     font-size: 14px;
     color: white;
     position: absolute;

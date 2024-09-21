@@ -3,10 +3,14 @@
 @tailwind utilities;
 
 @layer components {
+  .heightprob{
+    @apply min-h-[calc(100vh-80px)] md:min-h-0 flex flex-col;
+   }
   .calendar {
     @apply my-0 mx-0 md:my-[30px] md:mx-[30px] xl:ml-[40px] xl:mr-[30px] flex flex-col items-center;
     @apply bg-[linear-gradient(259.46deg,_#05878F_10.76%,_rgba(5,_135,_143,_1)_107.57%)] md:bg-none;
     /* @apply  pb-[30px]; */
+    @apply heightprob;
   }
   .calendar-header {
     @apply text-[22px]  leading-[28px] font-Lora font-bold text-white md:text-[rgba(5,135,143,1)] bg-transparent md:bg-white shadow-none md:shadow-[0px_1px_25px_0px_rgba(56,_159,_166,_0.1)] rounded-b-[20px] md:rounded-[20px];

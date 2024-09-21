@@ -12,7 +12,7 @@ import { Warning } from "../../assets/images";
 import HidePasswordSVG from "../../components/svg/HidePasswordSVG";
 import ShowPasswordSVG from "../../components/svg/ShowPasswordSVG";
 import { useSignIn } from "../../services/api/auth";
-import { getRole, saveTokens, setRole } from "../../utils/authTokens";
+import { getRole, saveTokens, setRole, setuser } from "../../utils/authTokens";
 // import LoginNavigator from "../../components/LoginNavigator";
 
 const StaffLogin: React.FC = () => {
@@ -183,9 +183,11 @@ const StaffLogin: React.FC = () => {
         if (userdata) {
           saveTokens(userdata.accessToken, userdata.refreshToken);
           setRole(userdata.userData.role);
+          setuser(userdata.userData);
           navigate("/dashboard"); // Navigate after successful login
         }
         setLoading(false);
+        console.log("Guardian Data", userdata);
       },
       onError: (error: any) => {
         console.error("Login failed:", error);

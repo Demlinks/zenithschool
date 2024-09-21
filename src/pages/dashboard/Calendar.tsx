@@ -1,84 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
 import { Add, FilterMobile } from "../../assets/images/dashboard/students";
 import { Pencil } from "../../assets/images/dashboard/calendar";
 import CalendarComponent from "../../components/dashboard/CalendarComponent";
-const events = [
-  {
-    title: "Cultural Day 2022",
-    start: new Date(2024, 7, 20),
-    end: new Date(2024, 7, 20),
-  },
-  {
-    title: "Democracy Day 2022",
-    start: new Date(2024, 7, 12),
-    end: new Date(2024, 7, 12),
-  },
-  {
-    title: "Demo Day 2024",
-    start: new Date(2024, 7, 13),
-    end: new Date(2024, 7, 13),
-  },
-  {
-    title: "Teacher's Workshop",
-    start: new Date(2024, 7, 15),
-    end: new Date(2024, 7, 15),
-  },
-  {
-    title: "Parent-Teacher Conference",
-    start: new Date(2024, 8, 1),
-    end: new Date(2024, 8, 1),
-  },
-  {
-    title: "School Anniversary",
-    start: new Date(2024, 8, 5),
-    end: new Date(2024, 8, 5),
-  },
-  {
-    title: "Midterm Break",
-    start: new Date(2024, 8, 8),
-    end: new Date(2024, 8, 12),
-  },
-  {
-    title: "Science Fair",
-    start: new Date(2024, 8, 18),
-    end: new Date(2024, 8, 18),
-  },
-  {
-    title: "Sports Day",
-    start: new Date(2024, 8, 25),
-    end: new Date(2024, 8, 25),
-  },
-  {
-    title: "Winter Break",
-    start: new Date(2024, 11, 20),
-    end: new Date(2025, 0, 4), // January 4, 2025
-  },
-  {
-    title: "Art Exhibition",
-    start: new Date(2025, 0, 10),
-    end: new Date(2025, 0, 10),
-  },
-  {
-    title: "Spring Concert",
-    start: new Date(2025, 2, 5),
-    end: new Date(2025, 2, 5),
-  },
-  {
-    title: "Graduation Day",
-    start: new Date(2025, 5, 15),
-    end: new Date(2025, 5, 15),
-  },
-  {
-    title: "Summer Camp",
-    start: new Date(2025, 6, 1),
-    end: new Date(2025, 6, 15),
-  },
+import { useQuery } from "@tanstack/react-query";
+import { getCalender, useCreateCalender } from "../../services/api/staffApis";
+import Loader from "../../shared/Loader";
+import SlidePanel from "../../shared/SlidePanel";
+import AddCalender from "./AddCalender";
+import { IEvent } from "../../types/user.type";
+// const events = [];
 
-  // Add other events...
-];
+export const formatDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
 const Calendar: React.FC = () => {
-  // const [studentDropDown, setStudentDropDown] = useState<string>("");
-  // const navigate = useNavigate();
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["calender"],
+    queryFn: () => getCalender(),
+  });
+
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+  // CONSOLE LOGGING ERROR IF REQUEST FAILS
+  isError && console.log(error);
+  const calender: {
+    event: string;
+    date: string;
+    id: number;
+  }[] =
+    (data &&
+      data.data.data.map(
+        (event: { event: string; date: string; id: number }) => ({
+          ...event,
+          date: formatDate(event.date), // Format the date string
+        })
+      )) ||
+    [];
+  data && console.log(calender);
+  
+  // const filterByGender = (gender: string) => {
+  //   if (gender === "") {
+  //     setFilteredData(staffs);
+  //   } else {
+  //     setFilteredData(staffs.filter((item) => item.gender === gender));
+  //   }
+  // };
+  const [isSliderOpen, setIsSliderOpen] = useState<boolean>(false);
+  const { mutate } = useCreateCalender();
+
+  const handleAddStaff = (newEvent: IEvent) => {
+    mutate(newEvent, {
+      onSuccess: (response) => {
+        const userdata = response;
+        if (userdata) {
+          console.log(userdata);
+        }
+      },
+      onError: (error: Error) => {
+        console.error("Login failed:", error);
+        // setLoading(false);
+        // Handle error (e.g., show an error message)
+      },
+    });
+    setIsSliderOpen(false);
+    console.log(newEvent);
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className="calendar">
       <div className="calendar-header">Calendar</div>
@@ -94,18 +89,33 @@ const Calendar: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-row self-center">
-            <button className="mr-[10px] lg:mr-[15px] xl:mr-[20px]">
-              <div className="w-[19.54px] h-auto mr-[5px] my-auto">
-                <img
-                  src={FilterMobile}
-                  alt="filter"
-                  className="object-contain object-center size-full"
-                />
+            <div className="filter">
+              <button
+                onClick={() => setIsFiltering(!isFiltering)}
+                className="mr-[10px] lg:mr-[15px] xl:mr-[20px]"
+              >
+                <div className="w-[19.54px] h-auto mr-[5px] my-auto">
+                  <img
+                    src={FilterMobile}
+                    alt="filter"
+                    className="object-contain object-center size-full"
+                  />
+                </div>
+                <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
+                  Filter
+                </div>
+              </button>
+              <div
+                className={`genders ${
+                  isFiltering ? "flex flex-col" : "hidden"
+                }`}
+              >
+                <button onClick={() => {}}>All</button>
+                <button onClick={() => {}}>Male</button>
+                <button onClick={() => {}}>Female</button>
               </div>
-              <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
-                Filter
-              </div>
-            </button>
+            </div>
+
             <button>
               <div className="max-w-[15px] h-auto mr-[5px]">
                 <img
@@ -114,7 +124,10 @@ const Calendar: React.FC = () => {
                   className="object-contain object-center size-full"
                 />
               </div>
-              <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
+              <div
+                onClick={() => setIsSliderOpen(true)}
+                className="font-Lora font-bold text-[15px] leading-[19.2px]"
+              >
                 Add
               </div>
             </button>
@@ -135,32 +148,45 @@ const Calendar: React.FC = () => {
         <div className="calendar-body-content">
           <div className="calendar-body-content-calendar">
             <>
-              <CalendarComponent events={events} />
+              <CalendarComponent events={calender} />
             </>
           </div>
           <div className="calendar-body-content-upcoming">
             <h2 className="text-[15px] md:text-[18px] xl:text-[22px] font-bold font-Lora mb-[10px] md:mb-[30px] lg:mb-[36px] xl:mb-[40px] text-center">
               Upcoming Events
             </h2>
-            {events.filter(event => event.start.getTime() >= Date.now()).map((event, index) => (
-              <div
-                key={index}
-                className="date-container flex flex-row items-center mb-[30px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
-              >
-                <div className="upcoming-date">
-                  <div className="text-[18px] leading-none font-bold font-Lora">
-                    {event.start.toUTCString().split(" ")[1]}
+            {calender
+              // .filter((event) => event.date.split("-") >= Date.now())
+              .map((event, index) => (
+                <div
+                  key={index}
+                  className="date-container flex flex-row items-center mb-[30px] md:mb-[35px] xl:mb-[40px] gap-[20px] md:gap-[30px]"
+                >
+                  <div className="upcoming-date">
+                    <div className="text-[18px] leading-none font-bold font-Lora">
+                      {event.date.split(" ")[1].slice(0, 2)}
+                    </div>
+                    <div className="text-[11px] font-normal">
+                      {event.date.split(" ")[0]}
+                    </div>
                   </div>
-                  <div className="text-[11px] font-normal">
-                    {event.start.toUTCString().split(" ")[2]}
+                  <div className=" font-Poppins font-medium text-[15px]">
+                    {event.event}
                   </div>
                 </div>
-                <div className=" font-Poppins font-medium text-[15px]">{event.title}</div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
+      <SlidePanel isOpen={isSliderOpen} onClose={() => setIsSliderOpen(false)}>
+        <h2 className="my-[20px] text-center text-[#05878F] font-Poppins text-[15px]">
+          Add New Staff
+        </h2>
+        <AddCalender
+          onSubmit={handleAddStaff}
+          onClose={() => setIsSliderOpen(false)}
+        />
+      </SlidePanel>
     </div>
   );
 };

@@ -94,7 +94,7 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
   ];
   // CHANGE ROLE
   const role = getRole();
-  
+
   console.log(role);
   return (
     <div
@@ -116,7 +116,7 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
       </div>
       <div className="bg-[#ECFEFF] hidden md:flex flex-row justify-center items-center font-Lora py-[14px]">
         <div className="text-base text-center leading-[20.48px] font-semibold 2xl:font-bold mr-[11px] text-[#05878F]">
-          2023/2024 <br className="hidden md:block xl:hidden" />
+          2024/2025 <br className="hidden md:block xl:hidden" />
           Academic Session
         </div>
         <div className="max-w-[13.17px] max-h-[7.59px]">
