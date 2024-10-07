@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface CircularProgressBarProps {
   style?: {
@@ -76,4 +76,4 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
   );
 };
 
-export default CircularProgressBar;
+export default memo(CircularProgressBar);

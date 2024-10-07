@@ -274,7 +274,7 @@
 // //             </div> */}
 // //           </div>
 // //           <div className="text-lg leading-[23.04px] font-bold text-white">
-// //             Zenith School
+// //             Zenith School 
 // //           </div>
 // //         </div>
 // //         <div className="absolute bottom-[-22px] right-[15.22%] left-[15.22%] bg-[#FFFF] flex flex-row justify-between items-center font-Poppins py-[8px] px-[14px] ml:px-[16px] rounded-[20px] shadow-[0px_8px_26px_0px_rgba(4,_106,_126,_0.17)]">

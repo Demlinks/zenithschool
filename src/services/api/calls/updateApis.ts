@@ -14,3 +14,15 @@ export const updateStudent = async ({
   });
   return response.data;
 };
+
+export const editStaff = ({ id, updateData }: { id: number; updateData: object }) => {
+  return apiClient.patch(`/staff/${id}/`, updateData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const deleteStaff = (id: number) => {
+  return apiClient.delete(`/staff/${id}/`);
+};

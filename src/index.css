@@ -7,11 +7,20 @@
 @tailwind utilities;
 
 @layer components {
+  .Toastify {
+    @apply z-[999999] !important;
+  }
   /* body{
     @apply overflow-x-hidden !important;
   } */
+  .student-addbutton-db-details-property .react-datepicker-popper {
+    @apply -left-16 !important;
+  }
+  .student-db-details-property .react-datepicker-popper {
+    @apply -left-16 !important;
+  }
   .react-datepicker {
-    @apply md:-translate-x-14 scale-95 -translate-y-2;
+    @apply scale-90 md:scale-[.85] md:-translate-y-3 translate-x-2 translate-y-3;
   }
   .heightprob {
     @apply min-h-[calc(100vh-80px)] md:min-h-0 flex flex-col;
@@ -54,7 +63,7 @@
   DASHBOARD
   ////////////////////////////
   */
-  .hsmInput {
+  .zsInput {
     @apply border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2;
   }
   .dashboard-main {
@@ -65,16 +74,15 @@
     @apply max-w-full;
     @apply pb-[80px] md:pb-0;
   }
-  .dashboard-header {
+  /* .dashboard-header { */
     /* @apply flex flex-row; */
-    @apply z-50;
-  }
+    /* @apply z-50;
+  } */
   .dashboard-header-desktop {
     @apply hidden md:flex flex-row justify-between;
     @apply px-[25px] lg:px-[30px] xl:px-[40px];
     @apply py-[12px] lg:py-[14px] xl:py-[17px];
     @apply shadow-[0px_8px_26px_0px_#046A7E2B];
-
     /* @apply min-h-[60px] lg:min-h-[63px] xl:min-h-[74px] 2xl:min-h-[89px]; */
     @apply fixed top-0;
     @apply left-0  md:left-[26%] lg:left-[24%] xl:left-[20.43%] 2xl:left-[20%];
@@ -187,9 +195,9 @@
     @apply sticky top-0;
     @apply z-10;
   }
-  .dashboard-m-search path {
+  /* .dashboard-m-search path {
     @apply fill-white;
-  }
+  } */
   .overview-body {
     @apply mt-[50px] md:mt-[10px] lg:mt-[20px] xl:mt-[25px] 2xl:mt-[30px];
     @apply flex flex-col md:flex-row;
@@ -594,7 +602,7 @@
     @apply bg-clr1 text-[8px] text-white font-Poppins rounded-full px-3 py-1 hover:cursor-pointer;
   }
 
-  .hsm-normal-btn {
+  .zs-normal-btn {
     @apply rounded-[15px] flex shadow-[0px_1px_25px_0px_#389FA61A];
   }
 }

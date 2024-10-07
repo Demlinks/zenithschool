@@ -5,11 +5,11 @@ import {
   EnvelopeIcon,
 } from "@heroicons/react/24/solid";
 import { PhoneIcon } from "@heroicons/react/24/outline";
-import { getStaff } from "../../services/api/staffApis";
 import { useQuery } from "@tanstack/react-query";
 import { IProfile } from "../../types/user.type";
 import Loader from "../../shared/Loader";
 import { convertToNormalWords } from "../../utils/regex";
+import { getStaff } from "../../services/api/calls/getApis";
 
 const formatDate = (date: Date) => {
   return date.toLocaleString("en-GB", {
@@ -62,7 +62,7 @@ isError && console.log(error);
   const profileClass = staff["classTeacher"];
   const otherProps = profileProps.filter(
     (prop) =>
-      !prop.includes("_name") && prop !== "id" && prop !== "classTeacher" && prop !== "dob"
+      !prop.includes("_name") && prop !== "id" && prop !== "classTeacher" && prop !== "date_of_birth"
   );
 
   if (isLoading) {
@@ -87,7 +87,7 @@ isError && console.log(error);
               </div>
               <div className="flex justify-between w-[45%] items-center">
                 <a
-                  href={`tel:+${staff["phoneNumber"]}`}
+                  href={`tel:+${staff["phone_number"]}`}
                   className="p-[10px] rounded-full shadow-shadow3 bg-clr1"
                 >
                   <PhoneSolid className="size-4 text-[#fff] rounded-2 " />
@@ -168,7 +168,7 @@ isError && console.log(error);
                 </p>
                 <div className="flex justify-center items-center gap-3">
                   <a
-                    href={`tel:+${staff["phoneNumber"]}`}
+                    href={`tel:+${staff["phone_number"]}`}
                     className="p-5 rounded-full shadow-shadow3"
                   >
                     <PhoneIcon className="size-3 xl:size-4 text-clr1 rounded-2 bg-[#fff]" />

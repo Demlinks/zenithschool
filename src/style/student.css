@@ -4,10 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.heightprob{
+.heightprob {
   @apply min-h-[calc(100vh-80px)] md:min-h-0 flex flex-col;
- }
+}
 /* 
   /////////////////////////////////////
   STUDENT
@@ -191,15 +190,12 @@
   @apply md:min-h-[calc(100vh-68px)] lg:min-h-[calc(100vh-72px)] xl:min-h-[calc(100vh-78px)] 2xl:min-h-[calc(100vh-89px)];
   @apply md:mx-[30px] 2xl:mx-[35px];
   @apply md:basis-[45%] lg:basis-[38%] xl:basis-[32.8%] bg-white;
-  @apply z-[50];
+  @apply z-[40];
   @apply self-baseline;
   @apply sticky md:top-[68px] lg:top-[72px] xl:top-[78px] 2xl:top-[89px];
   /* @apply overflow-y-clip; */
   @apply md:max-h-[calc(100vh-68px)] lg:max-h-[calc(100vh-72px)] xl:max-h-[calc(100vh-78px)] 2xl:max-h-[calc(100vh-89px)];
-  @apply  overflow-y-scroll;
-
-  
-  
+  @apply overflow-y-scroll;
 }
 .student-db-call,
 .student-db-email {
@@ -267,5 +263,13 @@
 }
 
 .student-db-pagination button:disabled {
-@apply bg-gray-200 text-gray-500;
+  @apply bg-gray-200 text-gray-500;
+}
+
+/* Adjusting rechart */
+.studentchart .recharts-responsive-container {
+  @apply relative !important;
+}
+.studentchart .recharts-wrapper {
+  @apply absolute bottom-0 !important;
 }

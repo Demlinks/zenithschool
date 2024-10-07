@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { IProfile } from "../types/user.type";
+import { IProfile, UserInterface } from "../types/user.type";
 
 const devEnvironment = import.meta.env.VITE_REACT_APP_ENV || "development";
 export const saveTokens = (accessToken?: string, refreshToken?: string) => {
@@ -37,7 +37,7 @@ export const getRole = (): string | undefined => {
   return sessionStorage.getItem("role") as string;
 };
 
-export const getUser = (): IProfile => {
+export const getUser = (): UserInterface => {
   return JSON.parse(sessionStorage.getItem("user") as string);
 };
 
@@ -49,5 +49,7 @@ export const clearTokens = () => {
 // Clearing of role
 export const clearRole = () => {
   sessionStorage.removeItem("role");
+};
+export const clearUser = () => {
   sessionStorage.removeItem("user");
 };

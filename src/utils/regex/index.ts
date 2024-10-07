@@ -16,6 +16,7 @@ export const commonPasswordsImport = [
   "qwerty",
   "abc123",
 ];
+export const today = new Date().toISOString().split("T")[0];
 export const convertToNormalWords = (text: string): string => {
   // Handle camelCase
   const camelCaseToSpaces = text.replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -48,3 +49,12 @@ export const calculateAge = (dateOfBirth: string) => {
 
 export const capitaliseCase = (word: string) =>
   word.toLowerCase().replace(/(^\w|\s\w)/g, (match) => match.toUpperCase());
+
+export const formatDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};

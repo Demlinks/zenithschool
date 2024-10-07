@@ -20,6 +20,9 @@ import AddButton from "../../../components/admin-dashboard/AddButton";
 import CallSVG from "../../../components/svg/student/CallSVG";
 import MessageSVG from "../../../components/svg/student/MessageSVG";
 import Loader from "../../../shared/Loader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // import useClasses from "../../hooks/useClasses";
 // import { getClassStudentsId } from "../../services/api/calls/getApis";
 // import { calculateAge } from "../../utils/regex";
@@ -223,13 +226,14 @@ const StudentAdminNames: React.FC = () => {
   // console.log("Ohhhh", studentIDs);
   return (
     <div className="student-names">
+      <ToastContainer />
       <div className="student-names-list">
         <div className="student-names-list-header">
           <div className="student-names-list-header1">
             Students <span className="hidden md:inline-block">Database</span>
           </div>
           <div className="student-names-list-header2">
-            {isClassLoading || isClassStudentsIdLoading || classNameID.length <= 0 ? (
+            {isClassLoading || isClassStudentsIdLoading ? (
               <div className=" font-Lora text-center w-full">Loading...</div>
             ) : isClassError ? (
               <div className=" font-Lora text-center w-full font-bold">
@@ -244,17 +248,15 @@ const StudentAdminNames: React.FC = () => {
               "Error"
             )}
           </div>
-          {
-          isClassLoading || isClassStudentsIdLoading || classNameID.length <= 0 ? (
-            <div className=" font-Lora text-center w-full min-h-[152px] hidden md:flex md:flex-row md:justify-center md:items-center">
-              <Loader />
+          {isClassLoading || isClassStudentsIdLoading ? (
+            <div className=" font-Lora text-center w-full hidden md:flex md:flex-row md:justify-center md:items-center">
+              <span>Loading...</span>
             </div>
           ) : isClassError ? (
-            <div className=" font-Lora text-center w-full min-h-[152px] font-bold hidden md:flex md:flex-row md:justify-center md:items-center">
+            <div className=" font-Lora text-center w-full hidden md:block font-bold">
               <span>Error fetching data</span>
             </div>
-          ) : 
-          className &&
+          ) : className &&
             classes
               .map((classes) => classes.name.toLowerCase())
               .includes(className) ? (
@@ -300,12 +302,12 @@ const StudentAdminNames: React.FC = () => {
         <div className="student-names-list-container">
           <>
             {/* Mobile view */}
-            {isClassLoading || isClassStudentsIdLoading || !classStudentsIdData || classNameID.length <= 0 ? (
-              <div className=" font-Lora text-center w-full min-h-[152px] flex flex-row justify-center items-center md:hidden">
+            {isClassLoading || isClassStudentsIdLoading ? (
+              <div className=" font-Lora text-center w-full min-h-[152px] flex flex-row justify-center items-center">
                 <Loader />
               </div>
             ) : isClassError ? (
-              <div className=" font-Lora text-center w-full min-h-[152px] font-bold flex flex-row justify-center items-center md:hidden">
+              <div className=" font-Lora text-center w-full min-h-[152px] font-bold flex flex-row justify-center items-center">
                 <span>Error fetching data</span>
               </div>
             ) : className &&
@@ -368,6 +370,7 @@ const StudentAdminNames: React.FC = () => {
                   </div>
                   {addToggle ? (
                     <AddButton
+                      toast={toast}
                       classNameID={classNameID[0]}
                       studentIDs={studentIDs}
                       className={className}
@@ -377,6 +380,8 @@ const StudentAdminNames: React.FC = () => {
                   ) : (
                     <Outlet
                       context={{
+                        toast,
+                        classStudentsIdData,
                         studentData,
                         className,
                         classNameID: classNameID[0],
@@ -399,7 +404,9 @@ const StudentAdminNames: React.FC = () => {
                       ))}
                     </tr>
                   </thead>
-                  {isClassLoading || isClassStudentsIdLoading || !classStudentsIdData || classNameID.length <= 0 ? (
+                  {isClassLoading ||
+                  isClassStudentsIdLoading ||
+                  classNameID.length <= 0 ? (
                     <tbody>
                       <tr>
                         <td
@@ -410,7 +417,9 @@ const StudentAdminNames: React.FC = () => {
                         </td>
                       </tr>
                     </tbody>
-                  ) : isClassError || isClassStudentsIdError ? (
+                  ) : isClassError ||
+                    isClassStudentsIdError ||
+                    classNameID.length <= 0 ? (
                     <tbody>
                       <tr>
                         <td
@@ -421,7 +430,8 @@ const StudentAdminNames: React.FC = () => {
                         </td>
                       </tr>
                     </tbody>
-                  ) : studentData.length > 0 ? (
+                  ) : classStudentsIdData &&
+                    Array.isArray(classStudentsIdData.data.data) ? (
                     <tbody>
                       {studentData?.map((data, index) => (
                         <tr
@@ -431,13 +441,16 @@ const StudentAdminNames: React.FC = () => {
                               ? "table-row-details-active table-row-details"
                               : "table-row-details"
                           }
-                          onClick={() =>
-                            // setTableActive(tableActive === index ? null : index),
-                            navigate(
-                              id === data.id?.toString()
-                                ? ""
-                                : data.id.toString()
+                          onClick={
+                            () => (
+                              navigate(
+                                id === data.id?.toString()
+                                  ? ""
+                                  : data.id.toString()
+                              ),
+                              toast.success("Testing")
                             )
+                            // setTableActive(tableActive === index ? null : index),
                           }
                         >
                           <td>
@@ -445,7 +458,8 @@ const StudentAdminNames: React.FC = () => {
                               <input
                                 type="checkbox"
                                 name="name"
-                                id="name"
+                                autoComplete="false"
+                                id={data.id.toString()}
                                 className=" size-[14px] checked:bg-black accent-[#05878F] appearance-auto hover:accent-[#05878F] border-[#05878F] cursor-pointer"
                                 onChange={() => {}}
                                 checked={
@@ -503,16 +517,18 @@ const StudentAdminNames: React.FC = () => {
                       ))}
                     </tbody>
                   ) : (
-                    <tbody>
-                      <tr>
-                        <td
-                          className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%]"
-                          colSpan={6}
-                        >
-                          Data Not Available
-                        </td>
-                      </tr>
-                    </tbody>
+                    classStudentsIdData && (
+                      <tbody>
+                        <tr>
+                          <td
+                            className="py-4 font-Lora text-center font-bold my-[10%] lg:my-[15%]"
+                            colSpan={6}
+                          >
+                            Data Not Available
+                          </td>
+                        </tr>
+                      </tbody>
+                    )
                   )}
                 </table>
               </>
@@ -536,6 +552,7 @@ const StudentAdminNames: React.FC = () => {
       <div className="student-names-database">
         {addToggle ? (
           <AddButton
+            toast={toast}
             classNameID={classNameID[0]}
             studentIDs={studentIDs}
             className={className}
@@ -552,6 +569,8 @@ const StudentAdminNames: React.FC = () => {
         ) : (
           <Outlet
             context={{
+              toast,
+              classStudentsIdData,
               studentData,
               className,
               classNameID: classNameID[0],

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CircularProgressBar from "../dashboard/CircularProgressBar";
-import StudentChat from "../dashboard/StudentChart";
+
 import { PathDown, PathUp } from "../../assets/images/dashboard/students";
 // import { useQuery } from "@tanstack/react-query";
 // import {
@@ -9,6 +9,7 @@ import { PathDown, PathUp } from "../../assets/images/dashboard/students";
 // } from "../../services/api/calls/getApis";
 // import { totalPercentageValueI } from "../../types/user.type";
 import useTotalPercentageValue from "../../hooks/useTotalPercentageValue";
+import StudentChart from "../dashboard/StudentChart";
 
 const TuitionFinance: React.FC = () => {
   const [totalTuitionDropDown, setTotalTuitionDropDown] =
@@ -211,7 +212,7 @@ const TuitionFinance: React.FC = () => {
               Number Of Students
             </div>
 
-            <StudentChat
+            <StudentChart
               value={{
                 total_students: totalPercentageValue.total_students,
                 paid: totalPercentageValue.paid,

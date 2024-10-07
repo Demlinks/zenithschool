@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { memo, ReactNode } from "react";
 import { BookNav, Logout, Paper } from "../../assets/images";
 import { NavLink, useNavigate } from "react-router-dom";
 import OverviewSVG from "../svg/dashboard navbar svg/OverviewSVG";
@@ -12,7 +12,12 @@ import ResultsSVG from "../svg/dashboard navbar svg/ResultsSVG";
 import ChatSVG from "../svg/dashboard navbar svg/ChatSVG";
 import CertsAwardsSVG from "../svg/dashboard navbar svg/CertsAwardsSVG";
 import DropdownSVG from "../svg/dashboard navbar svg/DropdownSVG";
-import { clearRole, clearTokens, getRole } from "../../utils/authTokens";
+import {
+  clearRole,
+  clearTokens,
+  clearUser,
+  getRole,
+} from "../../utils/authTokens";
 interface SideNavProps {
   mobileToggle: boolean;
   setMobileToggle: React.Dispatch<React.SetStateAction<boolean>>;
@@ -112,6 +117,7 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
           Zenith
           <br />
           School
+          
         </div>
       </div>
       <div className="bg-[#ECFEFF] hidden md:flex flex-row justify-center items-center font-Lora py-[14px]">
@@ -160,6 +166,7 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
           onClick={() => (
             setMobileToggle(false),
             clearRole(),
+            clearUser(),
             clearTokens(),
             navigate("/login")
           )}
@@ -181,4 +188,4 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
   );
 };
 
-export default SideNav;
+export default memo(SideNav);

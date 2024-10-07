@@ -10,12 +10,12 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit }) => {
   const [formData, setFormData] = useState<IProfile>({
     first_name: "",
     last_name: "",
-    age: 0,
+    age: '',
     image: "",
     subject: "",
-    dob: "",
+    date_of_birth: "",
     gender: "",
-    phoneNumber: "",
+    phone_number: "",
     homeAddress: "",
     email: "",
     homeTown: "",
@@ -81,8 +81,8 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit }) => {
         <label>Phone Number</label>
         <input
           type="tel"
-          name="phoneNumber"
-          value={formData.phoneNumber}
+          name="phone_number"
+          value={formData.phone_number}
           onChange={handleChange}
           required
         />

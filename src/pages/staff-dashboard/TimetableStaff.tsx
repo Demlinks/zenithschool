@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
-import { getAllTimetables } from "../../services/api/staffApis";
 import Loader from "../../shared/Loader";
 import { MobileHeader } from "../guardian-dashboard/Profile";
+import { getAllTimetables } from "../../services/api/calls/getApis";
 
 interface ClassPeriod {
   [key: string]: string[]; // Dynamic string keys, with the value being an array of strings

@@ -1,5 +1,5 @@
 {
-  "name": "hsm",
+  "name": "zs",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -24,6 +24,7 @@
     "react-dom": "^18.3.1",
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.25.1",
+    "react-toastify": "^10.0.5",
     "recharts": "^2.12.7"
   },
   "devDependencies": {

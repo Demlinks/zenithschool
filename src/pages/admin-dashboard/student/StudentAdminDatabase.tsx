@@ -16,6 +16,8 @@ import { deleteData } from "../../../services/api/calls/deleteApis";
 import { getStudentsId } from "../../../services/api/calls/getApis";
 import { calculateAge, capitaliseCase } from "../../../utils/regex";
 import { updateStudent } from "../../../services/api/calls/updateApis";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const StudentAdminDatabase: React.FC = () => {
   const [imageFile, setImageFile] = useState<string>("");
   const { id } = useParams();
@@ -77,6 +79,7 @@ const StudentAdminDatabase: React.FC = () => {
   }
 
   interface StudentContext {
+    toast: typeof toast;
     studentData: StudentI[];
     className: string;
     classNameID: number;
@@ -88,6 +91,7 @@ const StudentAdminDatabase: React.FC = () => {
     isClassStudentsIdError: boolean;
   }
   const {
+    toast: contextToast,
     studentData,
     className,
     classNameID,
@@ -293,12 +297,13 @@ const StudentAdminDatabase: React.FC = () => {
       deleteData(variables),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["classStudents"] });
-      alert("Student deleted successfully!");
-      console.log("Student deleted successfully!");
+      contextToast.success("Student deleted successfully!");
+      // console.log("Student deleted successfully!");
       // setAddToggle(false); // Close the form after successful submission
     },
     onError: (error) => {
-      console.error("Error adding student: ", error);
+      console.error("Error deleting student: ", error);
+      contextToast.error("Error deleting student: " + error);
     },
   });
   // const mutation = useMutation({
@@ -314,12 +319,16 @@ const StudentAdminDatabase: React.FC = () => {
       updateStudent(variables),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["classStudents"] });
-      alert("Student updated successfully!");
-      console.log("Student updated successfully!");
+      // alert("Student updated successfully!");
+      contextToast.success("Student updated successfully!");
+      // console.log("Student updated successfully!");
+      setEditable(false);
+
       // setAddToggle(false); // Close the form after successful submission
     },
     onError: (error) => {
-      console.error("Error adding student: ", error);
+      console.error("Error updating student: ", error);
+      contextToast.error("Error updating student: " + error);
     },
   });
   const { isPending: isUpdating } = updateMutation;
@@ -429,6 +438,9 @@ const StudentAdminDatabase: React.FC = () => {
   };
   return (
     <>
+      {/* <div className="fixed top-0 right-0 z-[9999]"> */}
+      {/* <ToastContainer autoClose={false} closeOnClick={false}/> */}
+      {/* </div> */}
       {isClassLoading ||
       isClassStudentsIdLoading ||
       isStudentsIdLoading ||
@@ -519,7 +531,7 @@ const StudentAdminDatabase: React.FC = () => {
                       name="name"
                       id="name"
                       value={
-                        `${newStudentData.first_name} ${newStudentData.last_name} ${newStudentData.middle_name}` ||
+                        `${newStudentData.last_name} ${newStudentData.first_name} ${newStudentData.middle_name}` ||
                         ""
                       }
                       disabled
@@ -586,7 +598,7 @@ const StudentAdminDatabase: React.FC = () => {
                     id="name"
                     value={
                       capitaliseCase(
-                        `${newStudentData.first_name} ${newStudentData.last_name} ${newStudentData.middle_name}`
+                        `${newStudentData.last_name} ${newStudentData.first_name} ${newStudentData.middle_name}`
                       ) || ""
                     }
                     disabled

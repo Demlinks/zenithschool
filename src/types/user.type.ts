@@ -1,3 +1,17 @@
+export interface UserInterface {
+  id: number;
+  firstName: string;
+  lastName: string;
+  lastLogin: string; // Date or string depending on how you're managing dates
+  dateJoined: string; // Date or string depending on how you're managing dates
+  role: string; // Adjust if there are more roles
+  phoneNumber: string;
+  username: string;
+  email: string;
+  is_active: boolean;
+}
+
+
 export interface IProfile {
   id?: string | number;
   title?: string;
@@ -5,7 +19,7 @@ export interface IProfile {
   last_name?: string;
   middle_name?: string;
   gender?: string;
-  dob?: string;
+  date_of_birth?: string;
   homeAddress?: string;
   stateOfOrigin?: string;
   homeTown?: string;
@@ -13,9 +27,9 @@ export interface IProfile {
   country?: string;
   subject?: string;
   classTeacher?: string;
-  age?: number;
+  age?: string;
   image?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   email?: string;
 }
 export interface IEvent {

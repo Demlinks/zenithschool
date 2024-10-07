@@ -1,30 +1,73 @@
 // AddStaffForm.tsx
-import React, { useState } from "react";
-import { IProfile } from "../../types/user.type";
+import React, { useEffect, useRef, useState } from "react";
+import { today } from "../../utils/regex";
+import useClasses from "../../hooks/useClasses";
+import Loader from "../../shared/Loader";
 
-interface AddStaffFormProps {
-  onSubmit: (staff: Partial<IProfile>) => void;
-  onClose: () => void;
+export interface AddStaff {
+  title: "";
+  first_name: "";
+  last_name: "";
+  middle_name: "";
+  age: 0;
+  image: "";
+  subject: "";
+  dob: "";
+  gender: "";
+  phone_number: "";
+  country: "";
+  date_of_birth: "";
+  home_address: "";
+  email: "";
+  home_town: "";
+  state_of_origin: "";
+  assigned_to: "";
+  qualification: "";
 }
 
-const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
-  const [formData, setFormData] = useState<Partial<IProfile>>({
+interface AddStaffFormProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: (staff: any) => void;
+  // onClose: () => void;
+  // onClose: () => void;
+}
+
+const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit }) => {
+  const { classNameData, isClassLoading } = useClasses();
+
+  const [classes, setClasses] = useState<{ id: number; name: string }[]>([]);
+  useEffect(() => {
+    if (classNameData) {
+      classNameData.map((data) => {
+        setClasses((prevCLassesData) => [
+          ...prevCLassesData,
+          { id: data.id, name: data.name },
+        ]);
+      });
+    }
+  }, [classNameData]);
+
+  const [formData, setFormData] = useState<Partial<AddStaff>>({
     title: "",
     first_name: "",
     last_name: "",
+    middle_name: "",
     age: 0,
     image: "",
     subject: "",
     dob: "",
     gender: "",
-    phoneNumber: "",
-    homeAddress: "",
+    phone_number: "",
+    country: "",
+    date_of_birth: "",
+    home_address: "",
     email: "",
-    homeTown: "",
-    stateOfOrigin: "",
-    classTeacher: "",
+    home_town: "",
+    state_of_origin: "",
+    assigned_to: "",
     qualification: "",
   });
+  const [imageFile, setImageFile] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,23 +78,87 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
     });
   };
 
+  const imageInputRef = useRef<HTMLInputElement | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const data = new FormData();
+    // Append the image file (if selected)
+    if (imageInputRef.current?.files?.[0]) {
+      data.append("image", imageInputRef.current.files[0]);
+    }
+
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value as string);
+    });
+
+    onSubmit(data);
+    // Reset the form
+    setFormData({
+      title: "",
+      first_name: "",
+      last_name: "",
+      age: 0,
+      subject: "",
+      date_of_birth: "",
+      gender: "",
+      phone_number: "",
+      home_address: "",
+      email: "",
+      home_town: "",
+      state_of_origin: "",
+      assigned_to: "",
+      qualification: "",
+    });
+    setImageFile("");
+    // Clear the file input (since files are not part of the formData state)
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
   };
+
+  if (isClassLoading) {
+    <Loader/>
+  }
 
   return (
     <form onSubmit={handleSubmit}>
+      {imageFile && (
+        <div className="relative max-w-[200px] size-[200px] md:max-w-[150px] md:size-[150px]  rounded-full overflow-hidden mb-[15px] md:mb-[5px] m-auto">
+          <img
+            src={imageFile}
+            alt=""
+            className="size-full scale-105 object-cover object-center border rounded-full"
+          />
+        </div>
+      )}
+      <div className="flex justify-between items-center mb-4">
+        <label className="font-Lora text-[15px] font-medium">Image</label>
+        <input
+          ref={imageInputRef}
+          name="image"
+          type="file"
+          onChange={(e) =>
+            e.target.files &&
+            setImageFile(URL.createObjectURL(e.target.files[0]))
+          }
+          accept="image/*"
+          className="size-full scale-90 mx-auto"
+        />
+      </div>
       <div className="flex justify-between items-center mb-4">
         <label className="font-Lora text-[15px] font-medium">Title</label>
         <select
+          required
           name="title"
           value={formData.title}
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           onChange={handleChange}
         >
+          <option value="">title</option>
           <option value="mr">Mr.</option>
-          <option value="mrs">Mr.</option>
+          <option value="mrs">Mrs.</option>
           <option value="miss">Miss</option>
         </select>
       </div>
@@ -106,8 +213,9 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
         <input
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           type="date"
-          name="dob"
-          value={formData.dob}
+          name="date_of_birth"
+          max={today}
+          value={formData.date_of_birth}
           onChange={handleChange}
           required
         />
@@ -116,10 +224,12 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
         <label className="font-Lora text-[15px] font-medium">Gender</label>
         <select
           name="gender"
+          required
           value={formData.gender}
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           onChange={handleChange}
         >
+          <option value="">Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
         </select>
@@ -131,8 +241,8 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
         <input
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           type="tel"
-          name="homeAddress"
-          value={formData.homeAddress}
+          name="home_address"
+          value={formData.home_address}
           onChange={handleChange}
           required
         />
@@ -144,8 +254,8 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
         <input
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           type="text"
-          name="stateOfOrigin"
-          value={formData.stateOfOrigin}
+          name="state_of_origin"
+          value={formData.state_of_origin}
           onChange={handleChange}
           required
         />
@@ -155,8 +265,8 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
         <input
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
           type="text"
-          name="homeTown"
-          value={formData.homeTown}
+          name="home_town"
+          value={formData.home_town}
           onChange={handleChange}
           required
         />
@@ -198,29 +308,37 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({ onSubmit, onClose }) => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <label className="font-Lora text-[15px] font-medium">Class</label>
-        <input
+        <select
+          name="assigned_to"
+          value={formData.assigned_to}
           className="w-4/6 h-full border-2 border-solid rounded-[15px] py-[5px] pl-3 pr-[40px] outline-none font-Poppins text-[15px] focus:border-[#05878F] hover:border-[#05878F] border-[#05878F] focus:border-2"
-          type="class"
-          name="classTeacher"
-          value={formData.classTeacher}
           onChange={handleChange}
-        />
+        >
+          <option value="">Select class</option>
+          {
+           classes.length && classes.map((classItem, index) => (
+              <option key={index} value={classItem.id}>
+                {classItem.name}
+              </option>
+            ))
+          }
+        </select>
       </div>
 
-      <menu className="flex justify-between">
+      <menu className="flex justify-center">
         <button
           type="submit"
           className=" bg-[#05878F] cursor-pointer px-[25px] font-Lora text-white self-center rounded-[25px] text-xl font-bold py-[7px] w-full sm:w-auto text-center mt-[23px] md:mt-[23px]  md:mb-[2px]"
         >
           Add Staff
         </button>
-        <button
+        {/* <button
           type="button"
           onClick={() => onClose()}
           className=" bg-red-500 cursor-pointer px-[15px] font-Lora text-white self-center rounded-[25px] text-xl font-bold py-[7px] w-full sm:w-auto text-center mt-[23px] md:mt-[23px]  md:mb-[2px]"
         >
           Close
-        </button>
+        </button> */}
       </menu>
     </form>
   );

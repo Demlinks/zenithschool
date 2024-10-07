@@ -10,10 +10,12 @@ import DropdownSVG from "../components/svg/dashboard navbar svg/DropdownSVG";
 import { Purity_Bliss } from "../assets/images/users";
 import { MenuIcon } from "../assets/images";
 import HomeSVG from "../components/svg/dashboard navbar svg/HomeSVG";
-import { getRole } from "../utils/authTokens";
+import { getRole, getUser } from "../utils/authTokens";
+import UserProfile from "../components/dashboard/UserProfile";
 
 const DashboardLayout: React.FC = () => {
   const [mobileToggle, setMobileToggle] = useState<boolean>(false);
+  const [toggleProfile, setToggleProfile] = useState<boolean>(false);
   const mobileFooters: { tab: ReactNode; route: string }[] = [
     { tab: <HomeSVG />, route: "" },
     { tab: <CalendarSVG />, route: "calendar" },
@@ -24,6 +26,13 @@ const DashboardLayout: React.FC = () => {
   useEffect(() => {
     console.log(data);
   }, []);
+
+  // CHANGE ROLE
+  const user = getUser();
+
+  useEffect(() => {
+    console.log("User", user);
+  }, [user]);
   return (
     <div className="dashboard">
       {/* Sidenav Background */}
@@ -39,7 +48,7 @@ const DashboardLayout: React.FC = () => {
           setMobileToggle={setMobileToggle}
         />
       </>
-      <div className="dashboard-header">
+      <div>
         {/* <div className="dashboard-header-mobile"></div> */}
         {/* Dashboard Mobile Header */}
         <div className="fixed top-0 z-50 flex md:hidden flex-row justify-between items-center w-full px-[30px] pt-[44.5px] ml:pt-[46px]">
@@ -61,10 +70,27 @@ const DashboardLayout: React.FC = () => {
 						className="max-w-[21.7px] max-h-[26.14px] object-center"
 					/>
 				</div> */}
-
-          <button className="w-[28px] h-[26px] ml:w-[30px] ml:h-[28px] dashboard-m-search">
-            <SearchSVG />
-          </button>
+          <div className="rounded-full relative">
+            <button
+              className="size-[30px] ml:size-[32px] rounded-full border-[white] border-[2px] border-solid overflow-hidden"
+              onClick={() => {
+                setToggleProfile(!toggleProfile);
+              }}
+            >
+              <img
+                src={Purity_Bliss}
+                alt={`${user.lastName} ${user.firstName}`}
+              />
+            </button>
+            <>
+              <UserProfile
+                user={user}
+                toggleProfile={toggleProfile}
+                Purity_Bliss={Purity_Bliss}
+                role={role}
+              />
+            </>
+          </div>
         </div>
         {/* Dashboard Mobile Footer */}
         <div className="dashboard-mobile-footer-container">
@@ -85,6 +111,7 @@ const DashboardLayout: React.FC = () => {
             );
           })}
         </div>
+        {/* Dashboard Desktop Header */}
         <div className="dashboard-header-desktop">
           <div className="basis-[44.76%] size-[44px] 2xl:size-[55px] relative mr-[10px] lg:mr-[15px] xl:mr-[20px]">
             <div className="dashboard-header-desktop-search-svg max-w-[24px] h-auto absolute top-0 bottom-0 left-[15px] lg:left-[20px] 2xl:left-[25px] flex items-center">
@@ -125,25 +152,50 @@ const DashboardLayout: React.FC = () => {
                 </div>
               </Link>
             </div>
-            <button className="flex flex-row items-center bg-[#F1F0F0] rounded-[20px] ml-[4px] lg:ml-[6px] xl:ml-[8px] 2xl:ml-[10px]">
-              <div className="rounded-full border-[#05878F] border-[3px] border-solid size-[44px] 2xl:size-[55px] overflow-hidden">
-                <img src={Purity_Bliss} alt="user" />
-              </div>
-              <div className="hidden lg:block font-medium text-[14.5px] xl:text-[15px] leading-[18px] 2xl:leading-[22.5px] font-Poppins ml-2">
-                <div className=" text-black">
-                  <span className="mr-[4px]">Purity</span>
-                  <span>Bliss</span>
+            <div className="bg-[#F1F0F0] rounded-[20px] ml-[4px] lg:ml-[6px] xl:ml-[8px] 2xl:ml-[10px] relative">
+              <button
+                onClick={() => {
+                  setToggleProfile(!toggleProfile);
+                }}
+                className="flex flex-row items-center rounded-[20px]"
+              >
+                <div className="rounded-full border-[#05878F] border-[3px] border-solid size-[44px] 2xl:size-[55px] overflow-hidden">
+                  <img
+                    src={Purity_Bliss}
+                    alt={`${user.lastName} ${user.firstName}`}
+                  />
                 </div>
-                <div className="text-[#C4C4C4]">
-                  {typeof role === "string"
-                    ? role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()
-                    : "No role"}
+                <div className="hidden lg:block font-medium text-[14.5px] xl:text-[15px] leading-[18px] 2xl:leading-[22.5px] font-Poppins ml-2">
+                  <div className=" text-black">
+                    <span className="mr-[4px]">{user.lastName}</span>
+                    <span>{user.firstName}</span>
+                  </div>
+                  <div className="text-[#C4C4C4]">
+                    {typeof role === "string"
+                      ? role.charAt(0).toUpperCase() +
+                        role.slice(1).toLowerCase()
+                      : "No role"}
+                  </div>
                 </div>
-              </div>
-              <div className="header-dropdown-icon ml-5 mr-5">
-                <DropdownSVG />
-              </div>
-            </button>
+                <div
+                  className={`header-dropdown-icon ml-5 mr-5 ${
+                    toggleProfile
+                      ? "rotate-180 duration-300"
+                      : "rotate-0 duration-300"
+                  }`}
+                >
+                  <DropdownSVG />
+                </div>
+              </button>
+              <>
+                <UserProfile
+                  user={user}
+                  toggleProfile={toggleProfile}
+                  Purity_Bliss={Purity_Bliss}
+                  role={role}
+                />
+              </>
+            </div>
           </div>
         </div>
       </div>

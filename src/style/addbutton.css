@@ -29,12 +29,16 @@
   @apply w-full;
   /* @apply inline; */
 }
-.react-datepicker-wrapper,
+ .react-datepicker-wrapper,
 .react-datepicker__input-container {
   @apply w-full;
   @apply flex justify-end md:justify-start;
   @apply z-[0];
 }
+ /* .react-datepicker-popper {
+  @apply -translate-x-14 scale-95 -translate-y-2;
+  @apply right-10;
+} */
 
 .student-addbutton-db-pagination {
   @apply flex md:hidden justify-between my-[50px];

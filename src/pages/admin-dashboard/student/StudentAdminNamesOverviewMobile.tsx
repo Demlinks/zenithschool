@@ -3,8 +3,35 @@ import { PathRight } from "../../../assets/images/dashboard/students";
 import { Link, useOutletContext } from "react-router-dom";
 import { Purity_Bliss } from "../../../assets/images/users";
 import Loader from "../../../shared/Loader";
+import { AxiosResponse } from "axios";
 
 const StudentAdminNamesOverviewMobile: React.FC = () => {
+  // interface classStudentIdI {
+  //   id: number;
+  //   student_class: string;
+  //   guardian_email: string;
+  //   first_name: string;
+  //   last_name: string;
+  //   middle_name: string;
+  //   image: string;
+  //   date_of_birth: string;
+  //   gender: string;
+  //   fathers_name: string;
+  //   mothers_name: string;
+  //   fathers_contact: string;
+  //   mothers_contact: string;
+  //   fathers_occupation: string;
+  //   mothers_occupation: string;
+  //   home_address: string;
+  //   state_of_origin: string;
+  //   home_town: string;
+  //   country: string;
+  //   starter_pack_collected: boolean;
+  //   religion: string;
+  //   total_tuition_paid: number;
+  //   schoolclass: number;
+  //   guardian: number;
+  // }
   interface Student {
     fathers_contact: string;
     guardian_email: string;
@@ -17,6 +44,8 @@ const StudentAdminNamesOverviewMobile: React.FC = () => {
     class: string;
   }
   interface StudentContext {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    classStudentsIdData: AxiosResponse<any, any> | undefined;
     studentData: Student[];
     isClassLoading: boolean;
     isClassStudentsIdLoading: boolean;
@@ -24,6 +53,7 @@ const StudentAdminNamesOverviewMobile: React.FC = () => {
     isClassStudentsIdError: boolean;
   }
   const {
+    classStudentsIdData,
     studentData,
     isClassLoading,
     isClassStudentsIdLoading,
@@ -41,7 +71,7 @@ const StudentAdminNamesOverviewMobile: React.FC = () => {
         <div className=" font-Lora text-center w-full font-bold min-h-[152px] flex flex-row justify-center items-center md:items-start">
           <span>Error fetching data</span>
         </div>
-      ) : studentData.length > 0 ? (
+      ) : classStudentsIdData && Array.isArray(classStudentsIdData.data.data) ? (
         studentData?.map((data, index) => (
           <Link
             to={data.id.toString()}

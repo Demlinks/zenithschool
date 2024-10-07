@@ -40,6 +40,7 @@ import Loader from "./shared/Loader";
 import ProfileLayout from "./layouts/role/ProfileLayout";
 import StaffLayout from "./layouts/role/StaffLayout";
 import TuitionLayout from "./layouts/role/TuitionLayout";
+import ToastNotification from "./shared/ToastNotification";
 // import { getRole } from "./utils/authTokens";
 // import StudentOverview from "./pages/dashboard/student/StudentOverview";
 
@@ -142,6 +143,7 @@ function App() {
   );
   return (
     <div className="min-h-screen">
+      <ToastNotification/>
       {/* <h1 className="text-purple-700 text-2xl">Hello World</h1> */}
       <QueryClientProvider client={queryClient}>
         <Suspense fallback={<Loader />}>

@@ -1,5 +1,6 @@
 // import apiClient from "./apiClient";
 
+import { getUser } from "../../../utils/authTokens";
 import apiClient from "../apiClient";
 
 export const getBaseClass = () => {
@@ -38,4 +39,21 @@ export const getStudents = () => {
 
 export const getStudentsId = (id: number) => {
   return apiClient.get(`students/${id}`);
+};
+
+export const getStaffs = () => {
+  return apiClient.get(`staff/`);
+};
+
+export const getStaff = () => {
+  const user = getUser();
+  return apiClient.get(`staff/${user.id}`);
+};
+
+export const getCalender = () => {
+  return apiClient.get(`/calender/`);
+};
+
+export const getAllTimetables = () => {
+  return apiClient.get(`/timetable/`);
 };

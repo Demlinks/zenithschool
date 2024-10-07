@@ -12,10 +12,10 @@ const Pagination = (props: IPaginstionProps) => {
   return (
     <>
       <div className="pagination">
-        <button className="prev hsm-normal-btn add-btn" onClick={props.prev}>
+        <button className="prev zs-normal-btn add-btn" onClick={props.prev}>
           <span>{"<<"}</span> Prev
         </button>
-        <button className="next hsm-normal-btn add-btn" onClick={props.next}>
+        <button className="next zs-normal-btn add-btn" onClick={props.next}>
           Next <span>{">>"}</span>
         </button>
       </div>

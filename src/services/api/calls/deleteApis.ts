@@ -4,3 +4,10 @@ export const deleteData = async ({id, studentid} : {id: number, studentid: numbe
     const response = await apiClient.delete(`classes/${id}/student/${studentid}`);
     return response.data;
   };
+
+export const deleteEvent = async (id:number) => {
+    const response = await apiClient.delete(
+      `/calender/${id}/`
+    );
+    return response.data;
+  };

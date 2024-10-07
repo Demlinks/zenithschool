@@ -17,7 +17,7 @@ const LandingPage: React.FC = () => {
 
           <div className="flex flex-col items-center mt-[40px] lg:mt-[50px] w-[90%] sm:w-[70%] xl:w-[60%]">
             <h1 className="text-center text-[28px] font-Lora md:text-[36px] xl:text-[48px] font-bold leading-[35.84px] md:leading-[49px] xl:leading-[61.44px] mb-[10px]">
-              Zenith School
+              Zenith School 
             </h1>
             <p className="text-[13px] font-Poppins xl:text-[24px] leading-[19.5px] md:leading-[27px] xl:leading-[36px] font-[400px] lg:font-[500px] text-center mx-[30px]">
               Welcome to zenith school, a software application that keeps

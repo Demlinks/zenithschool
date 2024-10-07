@@ -3,15 +3,19 @@ import { IProfile } from "../../types/user.type";
 import { Add, FilterMobile } from "../../assets/images/dashboard/students";
 import UserDetails from "../../shared/UserDetails";
 import Pagination from "../../shared/Pagination";
-import { useQuery } from "@tanstack/react-query";
-import { getStaffs, useCreateStaff } from "../../services/api/staffApis";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCreateStaff } from "../../services/api/staffApis";
 import Loader from "../../shared/Loader";
 import SlidePanel from "../../shared/SlidePanel";
-import AddStaffForm from "./AddStaffForm";
+import AddStaffForm, { AddStaff } from "./AddStaffForm";
+import { getStaffs } from "../../services/api/calls/getApis";
+import { showErrorToast, showSuccessToast } from "../../shared/ToastNotification";
+import { getRole } from "../../utils/authTokens";
 
 const Staff: React.FC = () => {
+  const queryClient = useQueryClient();
   const { data, isError, error, isLoading } = useQuery({
-    queryKey: ["staff"],
+    queryKey: ["staffs"],
     queryFn: () => getStaffs(),
   });
   const staffs: IProfile[] = useMemo(
@@ -24,12 +28,12 @@ const Staff: React.FC = () => {
   const [staffProfile, setStaffProfile] = useState<IProfile>({
     first_name: "",
     last_name: "",
-    age: 0,
+    age: "",
     image: "",
     subject: "",
-    dob: "",
+    date_of_birth: "",
     gender: "",
-    phoneNumber: "",
+    phone_number: "",
     homeAddress: "",
     email: "",
     homeTown: "",
@@ -54,7 +58,7 @@ const Staff: React.FC = () => {
   const filterByGender = (gender: string) => {
     if (gender === "") {
       setFilteredData(staffs);
-      setIsFiltering(false)
+      setIsFiltering(false);
     } else {
       setFilteredData(staffs.filter((item) => item.gender === gender));
       setIsFiltering(false);
@@ -76,24 +80,28 @@ const Staff: React.FC = () => {
     });
   };
   const [isSliderOpen, setIsSliderOpen] = useState<boolean>(false);
-  const { mutate } = useCreateStaff();
+  const { mutate, isPending: isCreatingUser } = useCreateStaff();
 
-  const handleAddStaff = (newStaff: Partial<IProfile>) => {
+  const handleAddStaff = (newStaff: Partial<AddStaff>) => {
     mutate(newStaff, {
-      onSuccess: (response: { data: IProfile }) => {
+      onSuccess: (response: { data: AddStaff }) => {
+        queryClient.invalidateQueries({ queryKey: ["staffs"] });
         const userdata = response.data;
         if (userdata) {
           console.log(userdata);
         }
+        showSuccessToast("Staff created successfully!")
       },
       onError: (error: Error) => {
-        console.error("Login failed:", error);
+        showErrorToast(`Error creating user ${error.message}`);
+        // alert(`Error creating user ${error.message}` );
+        console.error("Error creating user", error);
       },
     });
     setIsSliderOpen(false);
     console.log(newStaff);
   };
-  if (isLoading) {
+  if (isLoading || isCreatingUser) {
     return <Loader />;
   }
   return (
@@ -120,13 +128,11 @@ const Staff: React.FC = () => {
                       onClick={() => setIsFiltering(!isFiltering)}
                       className="mr-[10px] flex items-center lg:mr-[15px] xl:mr-[20px]"
                     >
-                      <div className="w-[19.54px] h-auto mr-[5px] my-auto">
-                        <img
-                          src={FilterMobile}
-                          alt="filter"
-                          className="object-contain object-center size-full"
-                        />
-                      </div>
+                      <img
+                        src={FilterMobile}
+                        alt="filter"
+                        className="object-contain object-center size-full w-[19.54px] h-auto mr-[5px] my-auto"
+                      />
                       <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
                         Filter
                       </div>
@@ -146,21 +152,22 @@ const Staff: React.FC = () => {
                     </div>
                   </div>
                 )}
-                <button
-                  className="add-btn flex items-center"
-                  onClick={() => setIsSliderOpen(true)}
-                >
-                  <div className="max-w-[15px]  h-auto mr-[5px]">
+                {getRole() === "admin" && (
+                  <button
+                    className="add-btn flex items-center"
+                    onClick={() => setIsSliderOpen(true)}
+                  >
                     <img
                       src={Add}
                       alt="add"
-                      className="object-contain object-center size-full"
+                      className="object-contain object-center size-full max-w-[15px]  h-auto mr-[5px]"
                     />
-                  </div>
-                  <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
-                    Add
-                  </div>
-                </button>
+
+                    <div className=" font-Lora font-bold text-[15px] leading-[19.2px]">
+                      Add
+                    </div>
+                  </button>
+                )}
               </div>
             </div>
             {filteredData.length ? (
@@ -168,7 +175,7 @@ const Staff: React.FC = () => {
                 <div className="cards">
                   {filteredData &&
                     filteredData.map((staff: IProfile, index: number) => (
-                      <div key={index} className="staff-card hsm-normal-btn">
+                      <div key={index} className="staff-card zs-normal-btn">
                         <img
                           src={staff?.image}
                           alt={staff?.first_name}
@@ -230,7 +237,7 @@ const Staff: React.FC = () => {
         </h2>
         <AddStaffForm
           onSubmit={handleAddStaff}
-          onClose={() => setIsSliderOpen(false)}
+          // onClose={() => setIsSliderOpen(false)}
         />
       </SlidePanel>
     </>

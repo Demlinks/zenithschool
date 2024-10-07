@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Bar,
   BarChart,
@@ -18,11 +18,11 @@ interface PaymentValue {
   paid_nothing: number;
 }
 
-// Define the props for the StudentChat component
-interface StudentChatProps {
+// Define the props for the StudentChart component
+interface StudentChartProps {
   value: PaymentValue;
 }
-const StudentChat: React.FC<StudentChatProps> = ({value}) => {
+const StudentChart: React.FC<StudentChartProps> = ({value}) => {
   const data = [
     { name: "Total", value: value.total_students, color: "#92D7F7" },
     { name: "Completed", value: value.paid, color: "#29CC97" },
@@ -31,10 +31,10 @@ const StudentChat: React.FC<StudentChatProps> = ({value}) => {
   ];
   return (
     <div
-      style={{ width: "100%", height: "84.5%" }}
-      className="font-Poppins text-[13px] font-medium "
+      style={{ width: "100%", height: "100%" }}
+      className="font-Poppins text-[13px] font-medium studentchart"
     >
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" aspect={2}>
         <BarChart
           data={data}
           stackOffset="sign"
@@ -45,6 +45,7 @@ const StudentChat: React.FC<StudentChatProps> = ({value}) => {
             left: -40,
             // bottom: 5,
           }}
+        
         >
           <CartesianGrid stroke="white" strokeDasharray="4 4" />
           <XAxis dataKey="name" />
@@ -62,4 +63,4 @@ const StudentChat: React.FC<StudentChatProps> = ({value}) => {
   );
 };
 
-export default StudentChat;
+export default memo(StudentChart);
