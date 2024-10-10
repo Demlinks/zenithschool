@@ -10,6 +10,14 @@ import Warning from "./Warning.png";
 import BookNav from "./dashboard/navbar/Book Nav.png";
 import Logout from "./dashboard/navbar/Logout.png";
 import MenuIcon from "./dashboard/Menu Icon.png";
+import Logo from "../../../public/logo.png";
+import Dotsl from "./landing/dots-l.png";
+import Dots from "./landing/dots.png";
+import Building from "./landing/building.png";
+import Hand from "./landing/hand_diamond.png";
+import Kid from "./landing/kid.png";
+import Dedeji from "./landing/mr-dedeji.png";
+
 // import ArrowDownMobile from "./dashboard/overview/Arrow Down Mobile.png";
 export {
   BackgroundImage,
@@ -24,5 +32,11 @@ export {
   BookNav,
   Logout,
   MenuIcon,
-  // ArrowDownMobile,
+  Logo,
+  Dotsl,
+  Dots,
+  Building,
+  Hand,
+  Kid,
+  Dedeji,
 };

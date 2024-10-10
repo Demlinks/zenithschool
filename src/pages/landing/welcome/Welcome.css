@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components{
+    .welcomeBg {
+        @apply bg-[url("src/assets/images/landing/kid-lg.png")] bg-cover bg-no-repeat bg-center;
+    }
+}

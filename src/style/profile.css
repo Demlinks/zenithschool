@@ -30,7 +30,7 @@
 }
 
 .heading {
-	@apply font-Lora font-bold text-[35px] text-center text-[#000] mb-[10px];
+	@apply font-Euclid font-bold text-[35px] text-center text-[#000] mb-[10px];
 }
 
 .user-subject-font {

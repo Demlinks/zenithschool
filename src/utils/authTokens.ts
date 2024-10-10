@@ -18,7 +18,7 @@ export const saveTokens = (accessToken?: string, refreshToken?: string) => {
     });
 };
 
-export const setRole = (role: string) => {
+export const setRole = (role: string|"staff"|"admin"|"guardian") => {
   sessionStorage.setItem("role", role);
 };
 export const setuser = (user: IProfile) => {

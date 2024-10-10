@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .testimonialCard{
+        @apply bg-[#F7FBFC] p-[16px] rounded-[8px] border-[1px] border-[#E6E6E6] m-2;
+        @apply min-h-[206px];
+    }
+    .testimonialCardHeader{
+        @apply flex items-center justify-between mb-2;
+    }
+    .testimonialCardHeader > img{
+        @apply w-[45px] h-[45px];
+    }
+    .testimonialCardContent{
+        @apply text-justify font-Euclid text-[14px];
+    }
+}

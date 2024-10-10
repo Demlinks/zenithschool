@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components{
+    .valueCard{
+        @apply bg-white p-5;
+    }
+    .valueCardHeader{
+        @apply flex items-center justify-between mb-5;
+    }
+    .valueCardHeader > img{
+        @apply w-[45px] h-[45px];
+    }
+    .valueCardContent{
+        @apply text-justify font-Euclid text-[14px];
+    }
+}
