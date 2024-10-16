@@ -9,6 +9,7 @@ export default {
         Euclid: ["Euclid Circular A", "sans - serif"],
       },
       colors: {
+        primary:"#4DB8EC",
         clr1: "#05878F",
         clr2: "#ECFEFF",
         gradient: {

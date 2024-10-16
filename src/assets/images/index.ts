@@ -15,6 +15,7 @@ import Dotsl from "./landing/dots-l.png";
 import Dots from "./landing/dots.png";
 import Building from "./landing/building.png";
 import Hand from "./landing/hand_diamond.png";
+import KidLG from "./landing/kid-lg.png";
 import Kid from "./landing/kid.png";
 import Dedeji from "./landing/mr-dedeji.png";
 
@@ -38,5 +39,6 @@ export {
   Building,
   Hand,
   Kid,
+  KidLG,
   Dedeji,
 };
