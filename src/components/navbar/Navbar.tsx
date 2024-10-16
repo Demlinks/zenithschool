@@ -143,8 +143,8 @@ const Navbar = () => {
     <>
       {" "}
       <div className="nav w-full">
-        <nav className="w-full flex items-center px-10 py-2 bg-white">
-          <div className="flex w-fit">
+        <nav className="w-full flex items-center justify-between px-10 py-2 bg-white">
+          <div className="flex w-full lg:w-fit ">
             <Link to={"/"} className="logo-link flex items-center">
               <img src={Logo} alt="logo" width={48} height={48} />
               <h1 className="text-[16px] font-bold uppercase">

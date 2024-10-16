@@ -65,8 +65,8 @@ const Reviews = () => {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <section className="w-5/6 container-px">
-      <div className="container-w flex items-end mx-auto">
+    <section className="w-5/6 container-px -mt-20">
+      <div className="container-w flex items-end mx-auto gap-4">
         <section className="embla">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex ml-[-2rem] touch-pan-y touch-pinch-zoom backface-hidden">

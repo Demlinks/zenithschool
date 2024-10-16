@@ -1,6 +1,6 @@
 import React, { memo, ReactNode } from "react";
 import { BookNav, Logout, Paper } from "../../assets/images";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import OverviewSVG from "../svg/dashboard navbar svg/OverviewSVG";
 import GuardianSVG from "../svg/GuardianSVG";
 import StaffSVG from "../svg/StaffSVG";
@@ -109,7 +109,10 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
           : "hidden md:flex md:flex-col"
       }`}
     >
-      <div className="ml-[30px] md:ml-4 lg:ml-7 xl:ml-10 mb-[34px] md:mb-[38px] flex flex-row items-center font-Lora">
+      <Link
+        to={"/"}
+        className="ml-[30px] md:ml-4 lg:ml-7 xl:ml-10 mb-[34px] md:mb-[38px] flex flex-row items-center font-Lora"
+      >
         <div className=" size-[40px] py-[11px] px-[12.5px] bg-white md:bg-[#ECFEFF] rounded-full mr-[18px] md:mr-[10px]">
           <img src={Paper} alt="logo" className="size-full object-center" />
         </div>
@@ -117,9 +120,8 @@ const SideNav: React.FC<SideNavProps> = ({ mobileToggle, setMobileToggle }) => {
           Zenith
           <br />
           School
-          
         </div>
-      </div>
+      </Link>
       <div className="bg-[#ECFEFF] hidden md:flex flex-row justify-center items-center font-Lora py-[14px]">
         <div className="text-base text-center leading-[20.48px] font-semibold 2xl:font-bold mr-[11px] text-[#05878F]">
           2024/2025 <br className="hidden md:block xl:hidden" />
