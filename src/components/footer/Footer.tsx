@@ -53,7 +53,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center gap-[35px] py-[16px] bg-[#EF9E73]">
+        <div className="flex items-center justify-center gap-[35px] pl-20 lg:pl-0 py-[16px] bg-[#EF9E73]">
           <Link to={"terms"} className="leading-[16.8px] text-[13px]">
             Terms and Condition
           </Link>

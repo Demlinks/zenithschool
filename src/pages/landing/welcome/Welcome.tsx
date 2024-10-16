@@ -6,7 +6,7 @@ const Welcome = () => {
     const navigate = useNavigate()
   return (
     <section className="w-full min-h-[85vh] welcomeBg">
-      <div className="w-full bg-black/50 h-full px-20 py-28">
+      <div className="w-full bg-black/50 h-full px-14 lg:px-20 py-28">
         <div className="space-y-4 mb-4">
           <h1 className="text-5xl font-light tracking-widest text-white">
             Welcome to
