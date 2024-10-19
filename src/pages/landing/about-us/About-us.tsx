@@ -3,10 +3,10 @@ import { Building } from "../../../assets/images";
 const About = () => {
   return (
     <section className="w-full py-10">
-      <header className="text-center font-Euclid text-2xl font-bold mb-10">
+      <header className="text-center font-Euclid text-2xl font-bold mb-3 lg:mb-10">
         About Us
       </header>
-      <div className="grid md:grid-cols-2 px-20 space-x-0 space-y-10 md:space-y-0 md:space-x-10">
+      <div className="grid md:grid-cols-2 px-5 lg:px-20 space-x-0 space-y-10 md:space-y-0 md:space-x-10">
         <div className="text">
           <p className="text-justify mb-6">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel

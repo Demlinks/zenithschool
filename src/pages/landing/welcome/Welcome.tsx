@@ -6,7 +6,7 @@ const Welcome = () => {
     const navigate = useNavigate()
   return (
     <section className="w-full min-h-[85vh] welcomeBg">
-      <div className="w-full bg-black/50 h-full px-14 lg:px-20 py-28">
+      <div className="w-full bg-black/50 h-full px-10 lg:px-20 py-28">
         <div className="space-y-4 mb-4">
           <h1 className="text-5xl font-light tracking-widest text-white">
             Welcome to
@@ -21,11 +21,17 @@ const Welcome = () => {
           <p className="text-lg text-white">For a Brighter Future</p>
           <img src={Dots} alt="left-dots" />
         </div>
-        <div className="btn-group space-x-3">
-          <button className="bg-white rounded-xl px-6 py-3" onClick={()=>{setRole("guardian"); navigate('login')}}>
+        <div className="btn-group flex lg:space-x-3">
+          <button
+            className="bg-white rounded-xl p-2 lg:px-6 lg:py-3"
+            onClick={() => {
+              setRole("guardian");
+              navigate("login");
+            }}
+          >
             Parent Login
           </button>
-          <button className="bg-black text-white  rounded-xl px-6 py-3">
+          <button className="bg-black text-white  rounded-xl p-2 lg:px-6 lg:py-3">
             Enroll Child
           </button>
         </div>

@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <div className="bg-[url('../src/assets/images/landing/building.png')] bg-cover bg-no-repeat bg-fixed bg-center">
-      <div className="container-px w-full pb-0 bg-[#132630]/80">
-        <div className="flex flex-col gap-[40px] pb-[96px] pr-14 pl-[104px] pt-[88px] lg:gap-0 lg:flex-row justify-between">
+      <div className="w-full pb-0 bg-[#132630]/80">
+        <div className="flex flex-col gap-[40px] pb-[96px] px-5 lg:pr-14 lg:pl-[104px] pt-[88px] lg:gap-0 lg:flex-row justify-between">
           <div className="flex flex-col gap-[16px]">
             <Link to={"/"} className="logo-link flex items-center">
               <img src={Logo} alt="logo" />
@@ -53,14 +53,14 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center gap-[35px] pl-20 lg:pl-0 py-[16px] bg-[#EF9E73]">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-[35px] pl-5 lg:pl-0 py-[16px] bg-[#EF9E73]">
           <Link to={"terms"} className="leading-[16.8px] text-[13px]">
             Terms and Condition
           </Link>
           <Link to={"privacy"} className="leading-[16.8px] text-[13px]">
             Privacy Policy
           </Link>
-          <p className="leading-[16.8px] text-[13px]">
+          <p className="leading-[16.8px] text-[13px] text-center">
             &copy; Zenith International Schools. Developed by Demlinks
             Technologies
           </p>

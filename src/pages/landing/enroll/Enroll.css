@@ -4,17 +4,17 @@
 
 @layer components {
     .banner {
-        @apply p-8 mb-20;
-        @apply flex w-[80%] bg-[#E6F4F6] flex-col rounded-[16px];
+        @apply w-11/12 lg:w-[80%] p-8 mb-20 gap-3 lg:gap-0;
+        @apply flex bg-[#E6F4F6] flex-col rounded-[16px];
     }
 
     .bannerText {
-        @apply text-start;
+        @apply text-center lg:text-start text-lg;
     }
 
     .bannerText>.heading {
-        @apply font-Euclid font-normal mb-0 text-start;
-        @apply text-[#0B5071] text-[40px] font-bold;
+        @apply font-Euclid font-normal mb-0 text-center lg:text-start;
+        @apply text-[#0B5071] text-[25px] lg:text-[40px] font-bold;
     }
 
     .bannerText>.sub-heading {
@@ -26,7 +26,7 @@
         @apply font-Euclid uppercase font-light transition duration-300 ease-linear w-fit;
         @apply text-[#ffffff] text-[16px] px-[40px] py-[8px] rounded-[8px] bg-[#4DB8EC];
         @apply hover:bg-[#ffffff] hover:text-[#4DB8EC] border-2 border-[#4DB8EC];
-        @apply self-end
+        @apply self-center lg:self-end;
     }
 
     .clasees {

@@ -4,10 +4,10 @@ import "./Values.css"
 const Values = () => {
   return (
     <section className="w-full py-10 pb-20 bg-[#DBF1FB]">
-      <header className="text-center font-Euclid text-2xl font-bold mb-10">
+      <header className="text-center font-Euclid text-2xl font-bold mb-3 lg:mb-10">
         Our Values
       </header>
-      <div className="grid lg:grid-cols-3 px-20 space-x-0 space-y-7 lg:space-y-0 lg:space-x-7">
+      <div className="grid lg:grid-cols-3 px-5 lg:px-20 space-x-0 space-y-7 lg:space-y-0 lg:space-x-7">
         <div className="valueCard">
           <div className="valueCardHeader">
             <span className="text-black text-xl font-Euclid font-bold">

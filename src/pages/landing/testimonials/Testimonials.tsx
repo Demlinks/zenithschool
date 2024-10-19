@@ -5,10 +5,10 @@ import "./Testimonials.css";
 const Testimonials = () => {
   return (
     <section className="w-full py-10 pb-20">
-      <header className="text-center font-Euclid text-2xl font-bold mb-10">
+      <header className="text-center font-Euclid text-2xl font-bold mb-5 lg:mb-10">
         Testimonials
       </header>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 px-20">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 px-5 lg:px-20">
         <div className="testimonialCard">
           <div className="testimonialCardHeader">
             <div className="flex items-center space-x-1">
